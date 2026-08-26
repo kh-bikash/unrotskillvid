@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 1: SaaS Hook</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f3f4f6;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 180px 72px 100px 72px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        background: rgba(99, 102, 241, 0.15);
+        border: 1px solid rgba(99, 102, 241, 0.4);
+        border-radius: 9999px;
+        color: #818cf8;
+        font-size: 24px;
+        font-weight: 600;
+        width: fit-content;
+        margin-bottom: 36px;
+      }
+
+      .headline {
+        font-size: 88px;
+        line-height: 1.05;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: #ffffff;
+        margin-bottom: 24px;
+      }
+
+      .gradient-text {
+        background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .subhead {
+        font-size: 32px;
+        line-height: 1.45;
+        color: #9ca3af;
+        margin-bottom: 60px;
+      }
+
+      .browser-mockup {
+        position: relative;
+        width: 100%;
+        background: #1e2230;
+        border: 1px solid #374151;
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+      }
+
+      .browser-bar {
+        height: 56px;
+        background: #181b26;
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        gap: 12px;
+        border-bottom: 1px solid #2d3748;
+      }
+
+      .circle {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+      }
+
+      .c-red { background: #ef4444; }
+      .c-yellow { background: #f59e0b; }
+      .c-green { background: #10b981; }
+
+      .url-bar {
+        background: #11141e;
+        height: 32px;
+        border-radius: 8px;
+        flex: 1;
+        margin-left: 20px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        font-size: 18px;
+        color: #6b7280;
+      }
+
+      .browser-body {
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .app-banner {
+        height: 160px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(192, 132, 252, 0.2) 100%);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+      }
+
+      .app-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .app-stat {
+        font-size: 38px;
+        font-weight: 700;
+        color: #818cf8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene1" class="clip" data-start="0" data-duration="8.00">
+      <div class="scene-wrap">
+        <div id="pill" class="pill">
+          <span>✨ JUST LAUNCHED · V2.0</span>
+        </div>
+
+        <h1 id="title" class="headline">
+          Supercharge your workflow with <span class="gradient-text">AI Automation</span>.
+        </h1>
+
+        <p id="sub" class="subhead">
+          Eliminate repetitive tasks, sync data across 100+ tools, and launch 10x faster.
+        </p>
+
+        <div id="browser" class="browser-mockup">
+          <div class="browser-bar">
+            <div class="circle c-red"></div>
+            <div class="circle c-yellow"></div>
+            <div class="circle c-green"></div>
+            <div class="url-bar">https://app.cloudstudio.io/dashboard</div>
+          </div>
+          <div class="browser-body">
+            <div class="app-banner">
+              <span class="app-title">Active AI Pipelines</span>
+              <span class="app-stat">+482% Flow</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#pill", { opacity: 0, y: -20, duration: 0.6, ease: "power2.out" }, 0.2)
+        .from("#title", { opacity: 0, y: 30, duration: 0.8, ease: "power2.out" }, 0.4)
+        .from("#sub", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 0.7)
+        .from("#browser", { opacity: 0, scale: 0.92, y: 40, duration: 0.9, ease: "back.out(1.4)" }, 1.0)
+        .to("#browser", { y: -12, repeat: 1, yoyo: true, duration: 3.0, ease: "sine.inOut" }, 1.9);
+
+      window.__timelines["scene1"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 3: SaaS Integration Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f3f4f6;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 140px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .integration-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-top: 40px;
+      }
+
+      .integ-chip {
+        background: #181b26;
+        border: 1px solid #2d3748;
+        border-radius: 24px;
+        padding: 32px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .integ-icon {
+        font-size: 40px;
+      }
+
+      .integ-name {
+        font-size: 28px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .integ-status {
+        font-size: 20px;
+        color: #10b981;
+        font-weight: 600;
+      }
+
+      .bottom-section {
+        margin-top: auto;
+      }
+
+      .bot-title {
+        font-size: 72px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+
+      .bot-sub {
+        font-size: 30px;
+        color: #9ca3af;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene3" class="clip" data-start="22.00" data-duration="9.00">
+      <div class="scene-wrap">
+        <div class="integration-grid">
+          <div id="int-1" class="integ-chip">
+            <span class="integ-icon">🐙</span>
+            <span class="integ-name">GitHub / GitLab</span>
+            <span class="integ-status">● Real-time Sync</span>
+          </div>
+
+          <div id="int-2" class="integ-chip">
+            <span class="integ-icon">💬</span>
+            <span class="integ-name">Slack & Discord</span>
+            <span class="integ-status">● Instant Alerts</span>
+          </div>
+
+          <div id="int-3" class="integ-chip">
+            <span class="integ-icon">⚡</span>
+            <span class="integ-name">Supabase / Postgres</span>
+            <span class="integ-status">● Zero Latency</span>
+          </div>
+
+          <div id="int-4" class="integ-chip">
+            <span class="integ-icon">☁️</span>
+            <span class="integ-name">AWS / Vercel</span>
+            <span class="integ-status">● One-Click Deploy</span>
+          </div>
+        </div>
+
+        <div class="bottom-section">
+          <h2 id="bot-head" class="bot-title">Plug into the stack you already love.</h2>
+          <p id="bot-desc" class="bot-sub">Native integrations with over 150+ developer and productivity platforms.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#int-1", { opacity: 0, scale: 0.85, duration: 0.6, ease: "back.out(1.4)" }, 0.2)
+        .from("#int-2", { opacity: 0, scale: 0.85, duration: 0.6, ease: "back.out(1.4)" }, 0.4)
+        .from("#int-3", { opacity: 0, scale: 0.85, duration: 0.6, ease: "back.out(1.4)" }, 0.6)
+        .from("#int-4", { opacity: 0, scale: 0.85, duration: 0.6, ease: "back.out(1.4)" }, 0.8)
+        .from("#bot-head", { opacity: 0, y: 30, duration: 0.7, ease: "power2.out" }, 1.1)
+        .from("#bot-desc", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 1.4);
+
+      window.__timelines["scene3"] = tl;
+    </script>
+  </body>
+</html>

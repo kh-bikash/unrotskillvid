@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Screen Hero Reel</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        font-display: block;
+        src: url(assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        font-display: block;
+        src: url(assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        font-display: block;
+        src: url(assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #13100e;
+        color: #f7f2eb;
+        font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #13100e;
+      }
+
+      /* Ambient Radial Glow */
+      .bg-glow {
+        position: absolute;
+        width: 800px;
+        height: 800px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 107, 53, 0.14) 0%, rgba(255, 107, 53, 0) 70%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Sub-comp slots stretch to fill the root */
+      #root > div[data-composition-src] {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="45.00"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Background Ambient Glow -->
+      <div id="glow-1" class="bg-glow" style="left: 140px; top: 200px;"></div>
+      <div id="glow-2" class="bg-glow" style="right: -100px; bottom: 300px;"></div>
+
+      <!-- Scene 1: Hook (0.00s – 8.00s) -->
+      <div
+        id="slot-scene-1"
+        class="clip"
+        data-composition-id="scene1"
+        data-composition-src="compositions/scene1.html"
+        data-start="0"
+        data-duration="8.00"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 2: Hero Footage (8.00s – 26.00s) -->
+      <div
+        id="slot-scene-2"
+        class="clip"
+        data-composition-id="scene2"
+        data-composition-src="compositions/scene2.html"
+        data-start="8.00"
+        data-duration="18.00"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 3: Nuance / Limit (26.00s – 35.00s) -->
+      <div
+        id="slot-scene-3"
+        class="clip"
+        data-composition-id="scene3"
+        data-composition-src="compositions/scene3.html"
+        data-start="26.00"
+        data-duration="9.00"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Scene 4: Payoff & Outro (35.00s – 45.00s) -->
+      <div
+        id="slot-scene-4"
+        class="clip"
+        data-composition-id="scene4"
+        data-composition-src="compositions/scene4.html"
+        data-start="35.00"
+        data-duration="10.00"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+
+      <!-- Continuous Narration Audio at Root -->
+      <audio
+        id="narration"
+        class="clip"
+        src="assets/narration.wav"
+        data-start="0"
+        data-duration="45.00"
+        data-track-index="10"
+      ></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const mainTl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = mainTl;
+    </script>
+  </body>
+</html>

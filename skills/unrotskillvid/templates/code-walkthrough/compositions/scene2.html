@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 2: Code Diff & Refactor</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #e6edf3;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 120px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .editor-window {
+        width: 100%;
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
+      }
+
+      .editor-header {
+        height: 60px;
+        background: #0d1117;
+        display: flex;
+        align-items: center;
+        padding: 0 28px;
+        gap: 12px;
+        border-bottom: 1px solid #30363d;
+      }
+
+      .tab-label {
+        font-size: 20px;
+        color: #e6edf3;
+        font-weight: 600;
+        margin-left: 16px;
+      }
+
+      .diff-body {
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .diff-line {
+        display: flex;
+        align-items: center;
+        padding: 18px 24px;
+        border-radius: 16px;
+        font-size: 26px;
+        font-weight: 600;
+      }
+
+      .diff-del {
+        background: rgba(248, 81, 73, 0.15);
+        color: #ff7b72;
+        border-left: 4px solid #f85149;
+      }
+
+      .diff-add {
+        background: rgba(46, 160, 67, 0.15);
+        color: #7ee787;
+        border-left: 4px solid #3fb950;
+      }
+
+      .bottom-caption {
+        padding: 28px;
+        background: rgba(22, 27, 34, 0.9);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        border-radius: 24px;
+        text-align: center;
+      }
+
+      .cap-text {
+        font-size: 32px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .cap-text span {
+        color: #38bdf8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene2" class="clip" data-start="10.00" data-duration="16.00">
+      <div class="scene-wrap">
+        <div id="editor" class="editor-window">
+          <div class="editor-header">
+            <span style="color: #ff7b72; font-size: 24px;">●</span>
+            <span style="color: #d29922; font-size: 24px;">●</span>
+            <span style="color: #3fb950; font-size: 24px;">●</span>
+            <span class="tab-label">pipeline_optimizer.ts</span>
+          </div>
+          <div class="diff-body">
+            <div id="diff-1" class="diff-line diff-del">
+              - sequentialSync(repositories, batchSize = 1)
+            </div>
+            <div id="diff-2" class="diff-line diff-add">
+              + autonomousParallelCluster(agents = 8, asyncCtx)
+            </div>
+            <div id="diff-3" class="diff-line diff-add">
+              + nativeToolCalling.verifyParity({ benchmark: true })
+            </div>
+          </div>
+        </div>
+
+        <div id="cap-box" class="bottom-caption">
+          <p class="cap-text">Executes multi-file refactors with <span>zero hallucinations</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#editor", { opacity: 0, scale: 0.93, y: 30, duration: 0.8, ease: "power2.out" }, 0.2)
+        .from("#diff-1", { opacity: 0, x: -20, duration: 0.6, ease: "power2.out" }, 0.6)
+        .from("#diff-2", { opacity: 0, x: -20, duration: 0.6, ease: "power2.out" }, 1.2)
+        .from("#diff-3", { opacity: 0, x: -20, duration: 0.6, ease: "power2.out" }, 1.8)
+        .from("#cap-box", { opacity: 0, y: 30, duration: 0.6, ease: "back.out(1.2)" }, 2.4);
+
+      window.__timelines["scene2"] = tl;
+    </script>
+  </body>
+</html>

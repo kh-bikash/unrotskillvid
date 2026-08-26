@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 4: Golden Rule & Takeaway</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f8fafc;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 180px 72px 140px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .golden-card {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 36px;
+        padding: 60px 48px;
+        text-align: center;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+        margin: 40px 0;
+      }
+
+      .rule-badge-main {
+        display: inline-flex;
+        padding: 8px 24px;
+        background: rgba(14, 165, 233, 0.15);
+        color: #38bdf8;
+        border-radius: 9999px;
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 24px;
+      }
+
+      .rule-headline {
+        font-size: 64px;
+        font-weight: 700;
+        line-height: 1.15;
+        color: #ffffff;
+      }
+
+      .rule-headline span {
+        color: #38bdf8;
+      }
+
+      .save-cta-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 32px;
+        background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+        border-radius: 24px;
+        color: #ffffff;
+        font-size: 34px;
+        font-weight: 700;
+        box-shadow: 0 20px 40px rgba(2, 132, 199, 0.4);
+      }
+
+      .footer-sub {
+        text-align: center;
+        font-size: 26px;
+        color: #94a3b8;
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene4" class="clip" data-start="32.00" data-duration="10.00">
+      <div class="scene-wrap">
+        <div>
+          <div id="gold-box" class="golden-card">
+            <div class="rule-badge-main">THE GOLDEN TAKEAWAY</div>
+            <h2 class="rule-headline">
+              Focus on <span>depth over duration</span>, and results follow naturally.
+            </h2>
+          </div>
+        </div>
+
+        <div id="cta-block">
+          <div class="save-cta-btn">
+            Save This Reel & Follow For More
+          </div>
+          <p class="footer-sub">Share with someone who needs to hear this today</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#gold-box", { opacity: 0, scale: 0.9, y: 30, duration: 0.8, ease: "back.out(1.3)" }, 0.2)
+        .from("#cta-block", { opacity: 0, y: 40, duration: 0.7, ease: "power2.out" }, 0.8)
+        .to(".save-cta-btn", { scale: 1.03, repeat: 1, yoyo: true, duration: 1.5, ease: "sine.inOut" }, 1.6);
+
+      window.__timelines["scene4"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 1: Developer Hook</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #e6edf3;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 180px 72px 100px 72px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .code-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        background: rgba(56, 189, 248, 0.12);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        border-radius: 9999px;
+        color: #38bdf8;
+        font-size: 24px;
+        font-weight: 600;
+        width: fit-content;
+        margin-bottom: 36px;
+      }
+
+      .headline {
+        font-size: 84px;
+        line-height: 1.08;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: #ffffff;
+        margin-bottom: 24px;
+      }
+
+      .cyan-accent {
+        color: #38bdf8;
+      }
+
+      .subhead {
+        font-size: 32px;
+        line-height: 1.45;
+        color: #8b949e;
+        margin-bottom: 60px;
+      }
+
+      .spec-card {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 32px;
+        padding: 44px;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      }
+
+      .spec-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #21262d;
+      }
+
+      .spec-row:last-child {
+        border-bottom: none;
+      }
+
+      .spec-key {
+        font-size: 28px;
+        color: #8b949e;
+        font-weight: 500;
+      }
+
+      .spec-val {
+        font-size: 30px;
+        color: #58a6ff;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene1" class="clip" data-start="0" data-duration="10.00">
+      <div class="scene-wrap">
+        <div id="pill" class="code-pill">
+          <span>⚡ OPEN WEIGHT FRONTIER MODEL</span>
+        </div>
+
+        <h1 id="title" class="headline">
+          Meet <span class="cyan-accent">GLM-4.6</span>: Built for Autonomous Coding.
+        </h1>
+
+        <p id="sub" class="subhead">
+          355B total parameters with native multi-tool calling and 200K token context window.
+        </p>
+
+        <div id="spec" class="spec-card">
+          <div class="spec-row">
+            <span class="spec-key">Architecture</span>
+            <span class="spec-val">Sparse MoE (32B Active)</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-key">Context Window</span>
+            <span class="spec-val">200,000 Tokens</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-key">SWE-bench Verified</span>
+            <span class="spec-val">68.1% Success Rate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#pill", { opacity: 0, y: -20, duration: 0.6, ease: "power2.out" }, 0.2)
+        .from("#title", { opacity: 0, y: 30, duration: 0.8, ease: "power2.out" }, 0.4)
+        .from("#sub", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 0.7)
+        .from("#spec", { opacity: 0, scale: 0.92, y: 40, duration: 0.9, ease: "back.out(1.3)" }, 1.0);
+
+      window.__timelines["scene1"] = tl;
+    </script>
+  </body>
+</html>

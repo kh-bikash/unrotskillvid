@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 3: Speed & Cost Benchmarks</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f5f5f5;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 140px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .chart-container {
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+        margin-top: 40px;
+      }
+
+      .chart-item {
+        background: #1c1c1c;
+        border: 1px solid #333333;
+        border-radius: 28px;
+        padding: 36px 40px;
+      }
+
+      .chart-head {
+        display: flex;
+        justify-content: space-between;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+
+      .chart-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .bar-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .bar-lbl {
+        width: 120px;
+        font-size: 22px;
+        font-weight: 600;
+        color: #888888;
+      }
+
+      .bar-box {
+        flex: 1;
+        height: 24px;
+        background: #000000;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .bar-a {
+        height: 100%;
+        background: #ef4444;
+      }
+
+      .bar-b {
+        height: 100%;
+        background: #3b82f6;
+      }
+
+      .bottom-copy {
+        margin-top: auto;
+      }
+
+      .head-bot {
+        font-size: 72px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #ffffff;
+        margin-bottom: 18px;
+      }
+
+      .sub-bot {
+        font-size: 30px;
+        color: #888888;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene3" class="clip" data-start="22.00" data-duration="11.00">
+      <div class="scene-wrap">
+        <div class="chart-container">
+          <div id="c-1" class="chart-item">
+            <div class="chart-head">
+              <span>Tokens Per Second</span>
+              <span style="color: #3b82f6;">+180% Faster</span>
+            </div>
+            <div class="chart-bars">
+              <div class="bar-row">
+                <span class="bar-lbl">Option A</span>
+                <div class="bar-box"><div id="b-fill-a1" class="bar-a" style="width: 35%;"></div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-lbl">Option B</span>
+                <div class="bar-box"><div id="b-fill-b1" class="bar-b" style="width: 95%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="c-2" class="chart-item">
+            <div class="chart-head">
+              <span>Cost Per 1M Tokens</span>
+              <span style="color: #3b82f6;">-65% Cheaper</span>
+            </div>
+            <div class="chart-bars">
+              <div class="bar-row">
+                <span class="bar-lbl">Option A</span>
+                <div class="bar-box"><div id="b-fill-a2" class="bar-a" style="width: 90%;"></div></div>
+              </div>
+              <div class="bar-row">
+                <span class="bar-lbl">Option B</span>
+                <div class="bar-box"><div id="b-fill-b2" class="bar-b" style="width: 32%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-copy">
+          <h2 id="h-bot" class="head-bot">Massive efficiency across high-throughput tasks.</h2>
+          <p id="s-bot" class="sub-bot">Cut API bills while dramatically improving user-facing response speeds.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#c-1", { opacity: 0, x: -30, duration: 0.7, ease: "power2.out" }, 0.2)
+        .from(["#b-fill-a1", "#b-fill-b1"], { width: "0%", duration: 1.0, ease: "power3.out" }, 0.5)
+        .from("#c-2", { opacity: 0, x: 30, duration: 0.7, ease: "power2.out" }, 0.8)
+        .from(["#b-fill-a2", "#b-fill-b2"], { width: "0%", duration: 1.0, ease: "power3.out" }, 1.1)
+        .from("#h-bot", { opacity: 0, y: 30, duration: 0.7, ease: "power2.out" }, 1.4)
+        .from("#s-bot", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 1.7);
+
+      window.__timelines["scene3"] = tl;
+    </script>
+  </body>
+</html>

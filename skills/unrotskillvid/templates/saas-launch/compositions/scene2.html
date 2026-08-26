@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 2: SaaS Bento Features</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f3f4f6;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 120px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .bento-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .bento-card {
+        background: #181b26;
+        border: 1px solid #2d3748;
+        border-radius: 32px;
+        padding: 44px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      .b-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: rgba(99, 102, 241, 0.2);
+        border: 1px solid rgba(99, 102, 241, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin-bottom: 20px;
+      }
+
+      .b-title {
+        font-size: 38px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 12px;
+      }
+
+      .b-desc {
+        font-size: 26px;
+        line-height: 1.4;
+        color: #9ca3af;
+      }
+
+      .bottom-caption {
+        padding: 28px;
+        background: rgba(24, 27, 38, 0.85);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 20px;
+        text-align: center;
+      }
+
+      .caption-text {
+        font-size: 32px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .caption-text span {
+        color: #818cf8;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene2" class="clip" data-start="8.00" data-duration="14.00">
+      <div class="scene-wrap">
+        <div class="bento-grid">
+          <div id="card-1" class="bento-card">
+            <div class="b-icon">⚡</div>
+            <h3 class="b-title">Instant Zero-Shot Sync</h3>
+            <p class="b-desc">Connect databases, APIs, and webhooks in seconds without boilerplate code.</p>
+          </div>
+
+          <div id="card-2" class="bento-card">
+            <div class="b-icon">🔒</div>
+            <h3 class="b-title">Enterprise Edge Security</h3>
+            <p class="b-desc">End-to-end encryption with SOC2 compliance and zero-retention data policies.</p>
+          </div>
+
+          <div id="card-3" class="bento-card">
+            <div class="b-icon">📊</div>
+            <h3 class="b-title">Autonomous Analytics</h3>
+            <p class="b-desc">Live streaming metric dashboards generated automatically from your events.</p>
+          </div>
+        </div>
+
+        <div id="bottom-cap" class="bottom-caption">
+          <p class="caption-text">Designed to <span>scale with your team</span> seamlessly.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#card-1", { opacity: 0, x: -30, duration: 0.7, ease: "power2.out" }, 0.2)
+        .from("#card-2", { opacity: 0, x: 30, duration: 0.7, ease: "power2.out" }, 0.5)
+        .from("#card-3", { opacity: 0, y: 30, duration: 0.7, ease: "power2.out" }, 0.8)
+        .from("#bottom-cap", { opacity: 0, scale: 0.95, duration: 0.6, ease: "back.out(1.2)" }, 1.2);
+
+      window.__timelines["scene2"] = tl;
+    </script>
+  </body>
+</html>

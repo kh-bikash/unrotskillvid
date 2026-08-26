@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 3: Benchmarks & Accuracy</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #e6edf3;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 140px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .benchmark-block {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        margin-top: 40px;
+      }
+
+      .bench-card {
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 28px;
+        padding: 36px 40px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      }
+
+      .bench-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .bench-name {
+        font-size: 30px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .bench-score {
+        font-size: 32px;
+        font-weight: 700;
+        color: #38bdf8;
+      }
+
+      .bar-bg {
+        width: 100%;
+        height: 22px;
+        background: #0d1117;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #21262d;
+      }
+
+      .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #38bdf8 0%, #58a6ff 100%);
+        border-radius: 12px;
+      }
+
+      .bench-note {
+        font-size: 20px;
+        color: #8b949e;
+        margin-top: 12px;
+      }
+
+      .bottom-copy {
+        margin-top: auto;
+      }
+
+      .head-bot {
+        font-size: 72px;
+        font-weight: 700;
+        line-height: 1.12;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+
+      .sub-bot {
+        font-size: 30px;
+        line-height: 1.45;
+        color: #8b949e;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene3" class="clip" data-start="26.00" data-duration="11.00">
+      <div class="scene-wrap">
+        <div class="benchmark-block">
+          <div id="b-1" class="bench-card">
+            <div class="bench-top">
+              <span class="bench-name">SWE-bench Verified</span>
+              <span class="bench-score">68.1%</span>
+            </div>
+            <div class="bar-bg">
+              <div id="fill-b1" class="bar-fill" style="width: 68.1%;"></div>
+            </div>
+            <p class="bench-note">Direct parity with Claude Sonnet in Claude Code & Cline</p>
+          </div>
+
+          <div id="b-2" class="bench-card">
+            <div class="bench-top">
+              <span class="bench-name">HumanEval Multi-lingual</span>
+              <span class="bench-score">89.4%</span>
+            </div>
+            <div class="bar-bg">
+              <div id="fill-b2" class="bar-fill" style="width: 89.4%;"></div>
+            </div>
+            <p class="bench-note">Python, TypeScript, Rust, Go, C++</p>
+          </div>
+        </div>
+
+        <div class="bottom-copy">
+          <h2 id="head-3" class="head-bot">Frontier performance with local efficiency.</h2>
+          <p id="sub-3" class="sub-bot">32B active parameters deliver sub-second token latency on modern hardware.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#b-1", { opacity: 0, x: -30, duration: 0.7, ease: "power2.out" }, 0.2)
+        .from("#fill-b1", { width: "0%", duration: 1.2, ease: "power3.out" }, 0.5)
+        .from("#b-2", { opacity: 0, x: 30, duration: 0.7, ease: "power2.out" }, 0.8)
+        .from("#fill-b2", { width: "0%", duration: 1.2, ease: "power3.out" }, 1.1)
+        .from("#head-3", { opacity: 0, y: 30, duration: 0.7, ease: "power2.out" }, 1.4)
+        .from("#sub-3", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 1.7);
+
+      window.__timelines["scene3"] = tl;
+    </script>
+  </body>
+</html>

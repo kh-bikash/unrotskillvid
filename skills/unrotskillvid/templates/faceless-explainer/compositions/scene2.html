@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 2: Faceless Tension</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f8fafc;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 120px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .mistake-list {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .mistake-item {
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 28px;
+        padding: 40px;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .m-num {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        font-size: 26px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .m-text {
+        font-size: 32px;
+        font-weight: 600;
+        color: #e2e8f0;
+      }
+
+      .footer-quote {
+        padding: 32px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(248, 113, 113, 0.3);
+        border-radius: 24px;
+        text-align: center;
+      }
+
+      .quote-text {
+        font-size: 34px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .quote-text span {
+        color: #f87171;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene2" class="clip" data-start="8.00" data-duration="12.00">
+      <div class="scene-wrap">
+        <div class="mistake-list">
+          <div id="m-1" class="mistake-item">
+            <div class="m-num">1</div>
+            <div class="m-text">Working 12 hours a day on shallow tasks</div>
+          </div>
+
+          <div id="m-2" class="mistake-item">
+            <div class="m-num">2</div>
+            <div class="m-text">Constant context switching & notifications</div>
+          </div>
+
+          <div id="m-3" class="mistake-item">
+            <div class="m-num">3</div>
+            <div class="m-text">Mistaking motion for real forward progress</div>
+          </div>
+        </div>
+
+        <div id="quote-box" class="footer-quote">
+          <p class="quote-text">Busyness is a <span>form of laziness</span>.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#m-1", { opacity: 0, x: -30, duration: 0.6, ease: "power2.out" }, 0.2)
+        .from("#m-2", { opacity: 0, x: 30, duration: 0.6, ease: "power2.out" }, 0.6)
+        .from("#m-3", { opacity: 0, x: -30, duration: 0.6, ease: "power2.out" }, 1.0)
+        .from("#quote-box", { opacity: 0, y: 30, duration: 0.7, ease: "back.out(1.2)" }, 1.5);
+
+      window.__timelines["scene2"] = tl;
+    </script>
+  </body>
+</html>

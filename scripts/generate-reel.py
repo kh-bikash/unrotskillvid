@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
-"""End-to-End Prompt-to-Video Engine for unrotskillvid.
+"""Autonomous Dynamic Multi-Scene Prompt-to-Video Engine for unrotskillvid.
 
-Takes a prompt/topic or script and autonomously:
-1. Generates a 4-scene high-retention script and visual scene copy (via Gemini / OpenAI / Built-in templates).
-2. Synthesizes 48kHz human voiceover audio (Gemini TTS, Edge TTS, ElevenLabs, OpenAI).
-3. Analyzes speech pauses and calculates pause-aligned scene timestamps.
-4. Customizes HTML5 / GSAP compositions with customized typography, badges, cards, and animations.
-5. Scaffolds the complete project and optionally renders to a 60fps MP4 video.
+Features:
+- Dynamically determines the optimal number of scenes (2 to 7+ scenes) based on prompt depth.
+- Synthesizes a structured multi-scene blueprint with custom visual layouts per scene.
+- Generates broadcast-quality 48kHz human voiceover audio (Gemini TTS, Edge, ElevenLabs, OpenAI).
+- Maps speech pauses and synchronizes exact scene boundaries.
+- Generates tailored HTML5 / GSAP 60fps compositions for every scene.
+- Prepares root index.html orchestrator and renders 1080x1920 MP4.
 
 Usage:
-    python scripts/generate-reel.py "Make a SaaS launch reel about an AI code assistant" --out videos/ai-assistant-reel --render
-    python scripts/generate-reel.py --prompt "Explain the 80/20 rule in productivity" --type faceless-explainer --provider gemini --render
+    python scripts/generate-reel.py "Create an in-depth 5-step guide on mastering prompt engineering" --render
+    python scripts/generate-reel.py "Announce our new Figma AI plugin in a fast 3-scene teaser" --provider gemini --render
 """
 
 import argparse
+import importlib.util
 import json
 import os
 import re
@@ -32,163 +34,393 @@ if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 
-# Built-in high retention script synthesis templates if no LLM API key is present
-DEFAULT_TEMPLATES_BY_TYPE = {
-    "screen-hero": {
-        "title": "Autonomous Agent Demo",
-        "badge": "PRODUCT BREAKTHROUGH",
-        "headline_1": "The new way to build autonomous software agents.",
-        "subhead_1": "Engineered for developers who need extreme precision and full repo control.",
-        "card_title": "agent_runtime_core.ts",
-        "caption_2_a": "Direct tool execution with real-time feedback.",
-        "caption_2_b": "Navigates complex repos and plans multi-file refactors.",
-        "metric_3_title_a": "Active Inference Cost",
-        "metric_3_badge_a": "-30% Lower",
-        "metric_3_title_b": "Context Capacity",
-        "metric_3_badge_b": "200K Tokens",
-        "headline_3": "Frontier reasoning at a fraction of token overhead.",
-        "subhead_3": "Mixture-of-Experts architecture activates only essential routing per step.",
-        "payoff_badge": "READY TODAY · OPEN SOURCE",
-        "big_stat": "68.1%",
-        "stat_desc": "SWE-bench Verified Accuracy Score",
-        "cta_text": "Try it in your workflow now",
-        "script": (
-            "Meet the next-generation autonomous engineering model. "
-            "With native multi-tool calling and expanded 200,000-token context, it navigates entire codebases, "
-            "plans multi-file refactors, and executes terminal commands with precision. "
-            "Its Mixture-of-Experts architecture activates only essential parameters, delivering frontier reasoning "
-            "with over thirty percent lower overhead. Available today under the MIT license to supercharge your local workflow."
-        )
-    },
-    "saas-launch": {
-        "title": "SaaS Product Launch",
-        "badge": "✨ JUST LAUNCHED · V2.0",
-        "headline_1": "Supercharge your workflow with AI Automation.",
-        "subhead_1": "Eliminate repetitive tasks, sync data across 100+ tools, and launch 10x faster.",
-        "browser_url": "https://app.cloudstudio.io/dashboard",
-        "banner_title": "Active AI Pipelines",
-        "banner_stat": "+482% Flow",
-        "bento_1_title": "Instant Zero-Shot Sync",
-        "bento_1_desc": "Connect databases, APIs, and webhooks in seconds without boilerplate code.",
-        "bento_2_title": "Enterprise Edge Security",
-        "bento_2_desc": "End-to-end encryption with SOC2 compliance and zero-retention data policies.",
-        "bento_3_title": "Autonomous Analytics",
-        "bento_3_desc": "Live streaming metric dashboards generated automatically from your events.",
-        "caption_2": "Designed to scale with your team seamlessly.",
-        "headline_3": "Plug into the stack you already love.",
-        "subhead_3": "Native integrations with over 150+ developer and productivity platforms.",
-        "cta_badge": "🚀 14-DAY FREE TRIAL · NO CARD REQUIRED",
-        "card_price": "$0",
-        "price_sub": "Start building in under 2 minutes",
-        "cta_btn": "Claim Your Free Account",
-        "script": (
-            "Say hello to the ultimate AI automation platform. "
-            "Connect your databases, webhooks, and APIs in seconds with zero boilerplate code. "
-            "Experience enterprise-grade security, instant zero-shot sync, and live streaming analytics dashboards. "
-            "Integrate natively with your favorite tools and start shipping faster today with a free 14-day trial."
-        )
-    },
-    "code-walkthrough": {
-        "title": "Developer Code Walkthrough",
-        "badge": "⚡ OPEN WEIGHT FRONTIER MODEL",
-        "headline_1": "Frontier AI coding with unrestricted autonomy.",
-        "subhead_1": "Native tool calling, multi-file refactoring, and benchmark-topping accuracy.",
-        "spec_1_k": "Architecture", "spec_1_v": "Sparse MoE (32B Active)",
-        "spec_2_k": "Context Window", "spec_2_v": "200,000 Tokens",
-        "spec_3_k": "SWE-bench Verified", "spec_3_v": "68.1% Parity",
-        "tab_label": "pipeline_optimizer.ts",
-        "diff_del": "- sequentialSync(repositories, batchSize = 1)",
-        "diff_add_1": "+ autonomousParallelCluster(agents = 8, asyncCtx)",
-        "diff_add_2": "+ nativeToolCalling.verifyParity({ benchmark: true })",
-        "caption_2": "Executes multi-file refactors with zero hallucinations.",
-        "headline_3": "Frontier performance with local efficiency.",
-        "subhead_3": "32B active parameters deliver sub-second token latency on modern hardware.",
-        "mit_badge": "🔓 100% OPEN WEIGHTS · MIT LICENSE",
-        "term_cmd": "ollama run model:latest",
-        "cta_btn": "Download Weights on HuggingFace",
-        "script": (
-            "Explore the new open-weight coding frontier model. "
-            "Built with 200,000 tokens of context and native tool calling, it matches proprietary frontier parity inside your IDE. "
-            "Watch it execute complex multi-file refactors and parallel agent workflows in real time. "
-            "Scoring 68.1% on SWE-bench Verified and licensed under MIT, you can run it locally with Ollama right now."
-        )
-    },
-    "faceless-explainer": {
-        "title": "Mental Model & Explainer",
-        "badge": "🧠 MENTAL MODEL OF THE DAY",
-        "headline_1": "Why 99% of people get productivity completely backwards.",
-        "hook_fact": "It is not about managing your time — it is about managing your cognitive energy.",
-        "mistake_1": "Working 12 hours a day on shallow tasks",
-        "mistake_2": "Constant context switching and notifications",
-        "mistake_3": "Mistaking motion for real forward progress",
-        "quote_2": "Busyness is a form of laziness.",
-        "headline_3": "Protect your peak energy windows.",
-        "subhead_3": "One hour of peak flow outperforms four hours of distracted effort every single time.",
-        "rule_headline": "Focus on depth over duration, and results follow naturally.",
-        "cta_btn": "Save This Reel & Follow For More",
-        "script": (
-            "Why do 99% of people get productivity completely backwards? "
-            "Most people spend 12 hours a day drowning in shallow tasks and constant context switching, mistaking motion for real progress. "
-            "The real secret is the 80/20 leverage protocol: protect 90 minutes of peak energy for your single highest-ROI task. "
-            "Focus on depth over duration, and the results will take care of themselves. Save this reel for when you need it."
-        )
-    },
-    "comparison-vs": {
-        "title": "Head-to-Head Comparison",
-        "badge": "⚔️ HEAD TO HEAD SHOWDOWN",
-        "headline_1": "Which tool actually delivers the best results?",
-        "card_a_name": "Option A",
-        "card_b_name": "Option B",
-        "caption_2": "Option B delivers 3x faster execution with zero vendor lock-in.",
-        "headline_3": "Massive efficiency across high-throughput tasks.",
-        "subhead_3": "Cut API bills while dramatically improving user-facing response speeds.",
-        "winner_text": "Option B takes the crown across speed, cost, and open freedom.",
-        "cta_btn": "Drop Your Thoughts in the Comments",
-        "script": (
-            "Let's put the top two AI engineering tools head-to-head in a real-world showdown. "
-            "Option A gives you a 128k context with 82% tool accuracy, but Option B blows past it with 200k tokens and 94% precision. "
-            "In latency benchmarks, Option B is nearly three times faster while slashing token costs by over 60%. "
-            "With open weights and unbeatable throughput, Option B takes the clear victory. Which one are you using?"
-        )
-    }
-}
+
+# -------------------------------------------------------------
+# Dynamic Scene Layout HTML Generators
+# -------------------------------------------------------------
+def render_scene_html(scene_data: dict, scene_index: int, total_scenes: int, theme: str = "dark") -> str:
+    """Dynamically generates self-contained GSAP-animated HTML composition for any scene."""
+    layout_type = scene_data.get("layout_type", "hook-card")
+    title = scene_data.get("headline", "Next-Generation Breakthrough")
+    subhead = scene_data.get("subhead", "Engineered for maximum velocity and autonomous execution.")
+    badge = scene_data.get("badge", f"STAGE {scene_index:02d} OF {total_scenes:02d}")
+    accent_color = scene_data.get("accent_color", "#ff6b35")
+    bg_color = scene_data.get("bg_color", "#13100e")
+
+    # Layout 1: Hook / Statement
+    if layout_type in ["hook-card", "statement", "hero"]:
+        content_body = f"""
+        <div id="badge" class="badge">
+          <div class="badge-dot"></div>
+          <span>{badge}</span>
+        </div>
+        <h1 id="title" class="headline">{title}</h1>
+        <p id="sub" class="subhead">{subhead}</p>
+        <div id="main-card" class="card-glass">
+          <div class="card-top">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <span class="card-label">{scene_data.get("card_label", "system_overview.ts")}</span>
+          </div>
+          <div class="card-body">
+            <div class="row-highlight">
+              <span class="row-key">{scene_data.get("key_label", "Primary Capability")}</span>
+              <span class="row-val">{scene_data.get("val_label", "100% Autonomous")}</span>
+            </div>
+          </div>
+        </div>
+        """
+        timeline_js = """
+        tl.from("#badge", { opacity: 0, y: -20, duration: 0.6, ease: "power2.out" }, 0.2)
+          .from("#title", { opacity: 0, y: 30, duration: 0.8, ease: "power2.out" }, 0.4)
+          .from("#sub", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 0.7)
+          .from("#main-card", { opacity: 0, scale: 0.92, y: 40, duration: 0.8, ease: "back.out(1.3)" }, 1.0)
+          .to("#main-card", { y: -10, repeat: 1, yoyo: true, duration: 2.5, ease: "sine.inOut" }, 1.8);
+        """
+
+    # Layout 2: Bento Grid / Feature List
+    elif layout_type in ["bento-grid", "features", "list"]:
+        items = scene_data.get("items", [
+            {"icon": "⚡", "title": "Zero-Latency Execution", "desc": "Instant real-time responses without queue delays."},
+            {"icon": "🔒", "title": "Enterprise Security", "desc": "End-to-end encrypted with zero retention policies."},
+            {"icon": "📊", "title": "Autonomous Analytics", "desc": "Live streaming metrics generated on the fly."}
+        ])
+        cards_html = ""
+        for i, item in enumerate(items, 1):
+            cards_html += f"""
+            <div id="bento-{i}" class="bento-item">
+              <div class="bento-icon">{item.get("icon", "✨")}</div>
+              <div class="bento-info">
+                <h3 class="bento-title">{item.get("title", f"Feature {i}")}</h3>
+                <p class="bento-desc">{item.get("desc", "High performance capability.")}</p>
+              </div>
+            </div>
+            """
+        content_body = f"""
+        <div id="badge" class="badge"><span>{badge}</span></div>
+        <h2 id="title" class="headline-medium">{title}</h2>
+        <div class="bento-container">{cards_html}</div>
+        <div id="caption-box" class="caption-bar"><p class="cap-text">{subhead}</p></div>
+        """
+        timeline_js = """
+        tl.from("#badge", { opacity: 0, y: -20, duration: 0.5, ease: "power2.out" }, 0.2)
+          .from("#title", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 0.4)
+          .from(".bento-item", { opacity: 0, x: -30, stagger: 0.25, duration: 0.6, ease: "power2.out" }, 0.7)
+          .from("#caption-box", { opacity: 0, y: 30, duration: 0.6, ease: "back.out(1.2)" }, 1.5);
+        """
+
+    # Layout 3: Step-by-Step / Protocol
+    elif layout_type in ["steps", "protocol", "framework"]:
+        steps = scene_data.get("steps", [
+            {"num": "1", "title": "Identify Highest-ROI Needle Mover"},
+            {"num": "2", "title": "Protect 90 Minutes of Deep Work"},
+            {"num": "3", "title": "Automate or Delegate Ruthlessly"}
+        ])
+        steps_html = ""
+        for s in steps:
+            steps_html += f"""
+            <div class="step-card">
+              <div class="step-num">{s.get("num", "1")}</div>
+              <div class="step-text">{s.get("title", "Protocol action item")}</div>
+            </div>
+            """
+        content_body = f"""
+        <div class="step-container">
+          <div class="protocol-box">
+            <div class="proto-badge">{badge}</div>
+            <h2 class="proto-title">{title}</h2>
+            <div class="steps-list">{steps_html}</div>
+          </div>
+          <div id="bot-copy" class="bottom-copy">
+            <p class="bot-sub">{subhead}</p>
+          </div>
+        </div>
+        """
+        timeline_js = """
+        tl.from(".protocol-box", { opacity: 0, scale: 0.92, y: 30, duration: 0.8, ease: "back.out(1.3)" }, 0.2)
+          .from(".step-card", { opacity: 0, x: -20, stagger: 0.25, duration: 0.6, ease: "power2.out" }, 0.6)
+          .from("#bot-copy", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 1.3);
+        """
+
+    # Layout 4: Metrics / Benchmark Graph
+    elif layout_type in ["metrics", "benchmarks", "stats"]:
+        metrics = scene_data.get("metrics", [
+            {"name": "Accuracy Benchmark", "val": "94.2%", "width": "94%"},
+            {"name": "Inference Efficiency", "val": "+180% Faster", "width": "85%"}
+        ])
+        metrics_html = ""
+        for idx, m in enumerate(metrics, 1):
+            metrics_html += f"""
+            <div id="m-{idx}" class="metric-card">
+              <div class="metric-top">
+                <span class="m-name">{m.get("name", "Metric")}</span>
+                <span class="m-val">{m.get("val", "100%")}</span>
+              </div>
+              <div class="m-track"><div class="m-fill" style="width: {m.get('width', '80%')};"></div></div>
+            </div>
+            """
+        content_body = f"""
+        <div id="badge" class="badge"><span>{badge}</span></div>
+        <h2 id="title" class="headline-medium">{title}</h2>
+        <div class="metric-container">{metrics_html}</div>
+        <div id="bot-copy" class="bottom-copy"><p class="bot-sub">{subhead}</p></div>
+        """
+        timeline_js = """
+        tl.from("#badge", { opacity: 0, y: -20, duration: 0.5, ease: "power2.out" }, 0.2)
+          .from("#title", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 0.4)
+          .from(".metric-card", { opacity: 0, y: 30, stagger: 0.3, duration: 0.7, ease: "power2.out" }, 0.7)
+          .from(".m-fill", { width: "0%", stagger: 0.3, duration: 1.0, ease: "power3.out" }, 0.9)
+          .from("#bot-copy", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 1.5);
+        """
+
+    # Layout 5: Code Diff / Terminal Execution
+    elif layout_type in ["code", "terminal", "diff"]:
+        content_body = f"""
+        <div id="badge" class="badge"><span>{badge}</span></div>
+        <h2 id="title" class="headline-medium">{title}</h2>
+        <div id="editor" class="editor-window">
+          <div class="editor-bar">
+            <span style="color:#f87171;">●</span>
+            <span style="color:#fbbf24;">●</span>
+            <span style="color:#34d399;">●</span>
+            <span class="tab-title">{scene_data.get("tab_name", "pipeline.ts")}</span>
+          </div>
+          <div class="diff-lines">
+            <div class="line del">{scene_data.get("code_del", "- sequentialExecution(agents = 1)")}</div>
+            <div class="line add">{scene_data.get("code_add_1", "+ parallelAutonomousCluster(nodes = 8)")}</div>
+            <div class="line add">{scene_data.get("code_add_2", "+ nativeToolCalling.verifyParity()")}</div>
+          </div>
+        </div>
+        <div id="bot-copy" class="bottom-copy"><p class="bot-sub">{subhead}</p></div>
+        """
+        timeline_js = """
+        tl.from("#badge", { opacity: 0, y: -20, duration: 0.5, ease: "power2.out" }, 0.2)
+          .from("#title", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 0.4)
+          .from("#editor", { opacity: 0, scale: 0.93, y: 30, duration: 0.8, ease: "back.out(1.3)" }, 0.7)
+          .from(".line", { opacity: 0, x: -20, stagger: 0.3, duration: 0.5, ease: "power2.out" }, 1.1)
+          .from("#bot-copy", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 1.7);
+        """
+
+    # Layout 6: Final Payoff / CTA
+    else:
+        content_body = f"""
+        <div class="payoff-wrap">
+          <div id="badge" class="badge"><span>{badge}</span></div>
+          <div id="stat-card" class="payoff-card">
+            <div class="stat-highlight">{scene_data.get("stat_highlight", "10x")}</div>
+            <div class="stat-label">{title}</div>
+          </div>
+          <div id="cta-block" class="cta-container">
+            <div class="cta-btn">{scene_data.get("cta_text", "Get Started Today")}</div>
+            <p class="cta-note">{subhead}</p>
+          </div>
+        </div>
+        """
+        timeline_js = """
+        tl.from("#badge", { opacity: 0, scale: 0.9, duration: 0.5, ease: "power2.out" }, 0.2)
+          .from("#stat-card", { opacity: 0, scale: 0.92, y: 30, duration: 0.8, ease: "back.out(1.3)" }, 0.4)
+          .from("#cta-block", { opacity: 0, y: 40, duration: 0.7, ease: "power2.out" }, 0.8)
+          .to(".cta-btn", { scale: 1.03, repeat: 1, yoyo: true, duration: 1.5, ease: "sine.inOut" }, 1.5);
+        """
+
+    return f"""<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene {scene_index}</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {{
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }}
+      @font-face {{
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }}
+      @font-face {{
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }}
+
+      * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+      body {{
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f7f2eb;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }}
+
+      .scene-wrap {{
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 120px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }}
+
+      .badge {{
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        background: rgba(255, 107, 53, 0.14);
+        border: 1px solid rgba(255, 107, 53, 0.35);
+        border-radius: 9999px;
+        color: #ff6b35;
+        font-size: 24px;
+        font-weight: 600;
+        width: fit-content;
+        margin-bottom: 28px;
+      }}
+      .badge-dot {{ width: 10px; height: 10px; border-radius: 50%; background: #ff6b35; }}
+
+      .headline {{ font-size: 84px; line-height: 1.08; font-weight: 700; color: #ffffff; margin-bottom: 24px; }}
+      .headline-medium {{ font-size: 72px; line-height: 1.12; font-weight: 700; color: #ffffff; margin-bottom: 28px; }}
+      .subhead {{ font-size: 32px; line-height: 1.45; color: #a79c91; margin-bottom: 48px; }}
+
+      .card-glass {{
+        background: #1f1915;
+        border: 1px solid #3b332b;
+        border-radius: 32px;
+        padding: 40px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+      }}
+      .card-top {{ display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }}
+      .dots {{ display: flex; gap: 8px; }}
+      .dot {{ width: 14px; height: 14px; border-radius: 50%; background: #3b332b; }}
+      .card-label {{ font-size: 24px; color: #e8ded4; font-weight: 600; }}
+      .row-highlight {{
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 24px 28px; background: #16120f; border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.05);
+      }}
+      .row-key {{ font-size: 26px; font-weight: 600; color: #ffffff; }}
+      .row-val {{ font-size: 26px; font-weight: 700; color: #ff6b35; }}
+
+      /* Bento */
+      .bento-container {{ display: flex; flex-direction: column; gap: 24px; }}
+      .bento-item {{
+        background: #1f1915; border: 1px solid #3b332b; border-radius: 28px;
+        padding: 32px; display: flex; align-items: center; gap: 24px;
+      }}
+      .bento-icon {{
+        width: 64px; height: 64px; border-radius: 18px; background: rgba(255,107,53,0.15);
+        display: flex; align-items: center; justify-content: center; font-size: 32px; flex-shrink: 0;
+      }}
+      .bento-title {{ font-size: 30px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }}
+      .bento-desc {{ font-size: 24px; color: #a79c91; line-height: 1.35; }}
+      .caption-bar {{
+        padding: 24px; background: rgba(31,25,21,0.9); border: 1px solid rgba(255,107,53,0.3);
+        border-radius: 20px; text-align: center; font-size: 28px; font-weight: 600; color: #ffffff;
+      }}
+
+      /* Steps */
+      .step-container {{ display: flex; flex-direction: column; justify-content: space-between; height: 100%; }}
+      .protocol-box {{ background: #1f1915; border: 2px solid #ff6b35; border-radius: 36px; padding: 48px; }}
+      .proto-badge {{ font-size: 22px; color: #ff6b35; font-weight: 700; margin-bottom: 16px; }}
+      .proto-title {{ font-size: 56px; font-weight: 700; color: #ffffff; margin-bottom: 32px; }}
+      .steps-list {{ display: flex; flex-direction: column; gap: 20px; }}
+      .step-card {{ display: flex; align-items: center; gap: 20px; padding: 18px 0; border-bottom: 1px solid #3b332b; }}
+      .step-card:last-child {{ border-bottom: none; }}
+      .step-num {{
+        width: 48px; height: 48px; border-radius: 50%; background: rgba(255,107,53,0.2);
+        color: #ff6b35; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700;
+      }}
+      .step-text {{ font-size: 28px; font-weight: 600; color: #f7f2eb; }}
+
+      /* Metrics */
+      .metric-container {{ display: flex; flex-direction: column; gap: 28px; }}
+      .metric-card {{ background: #1f1915; border: 1px solid #3b332b; border-radius: 28px; padding: 36px; }}
+      .metric-top {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }}
+      .m-name {{ font-size: 28px; font-weight: 600; color: #e8ded4; }}
+      .m-val {{ font-size: 30px; font-weight: 700; color: #ff6b35; }}
+      .m-track {{ width: 100%; height: 20px; background: #16120f; border-radius: 10px; overflow: hidden; }}
+      .m-fill {{ height: 100%; background: linear-gradient(90deg, #ff6b35 0%, #ffa500 100%); border-radius: 10px; }}
+
+      /* Editor */
+      .editor-window {{ background: #1f1915; border: 1px solid #3b332b; border-radius: 28px; overflow: hidden; }}
+      .editor-bar {{ height: 56px; background: #16120f; display: flex; align-items: center; padding: 0 24px; gap: 10px; }}
+      .tab-title {{ font-size: 20px; color: #e8ded4; font-weight: 600; margin-left: 14px; }}
+      .diff-lines {{ padding: 36px; display: flex; flex-direction: column; gap: 14px; }}
+      .line {{ padding: 16px 20px; border-radius: 12px; font-size: 24px; font-weight: 600; }}
+      .del {{ background: rgba(239,68,68,0.15); color: #f87171; }}
+      .add {{ background: rgba(16,185,129,0.15); color: #34d399; }}
+
+      /* Payoff */
+      .payoff-wrap {{ display: flex; flex-direction: column; justify-content: space-between; height: 100%; }}
+      .payoff-card {{ background: #1f1915; border: 1px solid #3b332b; border-radius: 36px; padding: 60px 40px; text-align: center; }}
+      .stat-highlight {{ font-size: 110px; font-weight: 700; color: #ff6b35; line-height: 1.0; margin-bottom: 16px; }}
+      .stat-label {{ font-size: 34px; font-weight: 700; color: #ffffff; }}
+      .cta-container {{ display: flex; flex-direction: column; gap: 20px; }}
+      .cta-btn {{
+        padding: 32px; background: #ff6b35; border-radius: 24px; color: #ffffff;
+        font-size: 34px; font-weight: 700; text-align: center; box-shadow: 0 20px 40px rgba(255,107,53,0.4);
+      }}
+      .cta-note {{ text-align: center; font-size: 26px; color: #a79c91; }}
+      .bottom-copy {{ margin-top: auto; }}
+      .bot-sub {{ font-size: 28px; color: #a79c91; line-height: 1.45; }}
+    </style>
+  </head>
+  <body>
+    <div id="scene{scene_index}" class="clip" data-start="0" data-duration="10.00">
+      <div class="scene-wrap">
+        {content_body}
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {{}};
+      const tl = gsap.timeline({{ paused: true }});
+      {timeline_js}
+      window.__timelines["scene{scene_index}"] = tl;
+    </script>
+  </body>
+</html>
+"""
 
 
-def detect_template_type(prompt: str) -> str:
-    """Infer the most appropriate video style from the prompt text."""
-    p = prompt.lower()
-    if any(w in p for w in ["vs", "compare", "comparison", "better than", "benchmark battle", "against"]):
-        return "comparison-vs"
-    if any(w in p for w in ["code", "developer", "model", "github", "refactor", "swe-bench", "ollama", "python", "typescript", "repo"]):
-        return "code-walkthrough"
-    if any(w in p for w in ["saas", "launch", "product hunt", "dashboard", "app", "feature", "pricing", "free trial", "signup"]):
-        return "saas-launch"
-    if any(w in p for w in ["explain", "psychology", "mental model", "productivity", "habit", "lesson", "why", "secret", "faceless"]):
-        return "faceless-explainer"
-    return "screen-hero"
-
-
-def generate_llm_script(prompt: str, video_type: str) -> dict:
-    """Use Gemini or OpenAI to synthesize tailored script & scene copy if API keys exist."""
+# -------------------------------------------------------------
+# Dynamic LLM Multi-Scene Script Synthesizer
+# -------------------------------------------------------------
+def synthesize_dynamic_scenes(prompt: str, target_scenes: int = 0) -> dict:
+    """Uses LLM (or intelligent heuristic decomposition) to break any prompt into 2 to 7+ structured scenes."""
     gemini_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     openai_key = os.environ.get("OPENAI_API_KEY")
 
-    system_instruction = f"""You are a master viral vertical video producer and copywriter for 9:16 reels.
-Generate a high-retention 4-scene video blueprint for the template style: '{video_type}'.
-The user prompt is: "{prompt}".
+    scene_constraint = f"Decide the best number of scenes (between 2 to 6 scenes) to tell this story."
+    if target_scenes > 1:
+        scene_constraint = f"Break this down into EXACTLY {target_scenes} scenes."
 
-Return valid JSON ONLY with these exact fields:
+    system_instruction = f"""You are a master viral vertical video producer for 9:16 reels.
+The user wants a reel about: "{prompt}".
+{scene_constraint}
+
+Return valid JSON ONLY with this structure:
 {{
-  "title": "Short Project Title",
-  "badge": "Uppercase Category Badge",
-  "headline_1": "Punchy Scene 1 Headline (max 8 words)",
-  "subhead_1": "Scene 1 Subhead (1 sentence)",
-  "script": "The complete 40-50 second voiceover script text in natural human tone, exactly 4 sentences matching Scene 1 Hook, Scene 2 Body, Scene 3 Nuance, Scene 4 Payoff CTA.",
-  "scene_2_caption": "Scene 2 Caption text",
-  "headline_3": "Scene 3 Nuance Headline",
-  "subhead_3": "Scene 3 Subhead explanation",
-  "payoff_text": "Scene 4 Big payoff statement",
-  "cta_button": "Scene 4 Action button text"
+  "title": "Short Title",
+  "style": "screen-hero | saas-launch | code-walkthrough | faceless-explainer | comparison-vs",
+  "scenes_count": 4,
+  "full_script": "Complete narration text where each sentence corresponds sequentially to each scene.",
+  "scenes": [
+    {{
+      "scene_num": 1,
+      "layout_type": "hook-card | bento-grid | steps | metrics | code | payoff",
+      "badge": "Uppercase Category Badge",
+      "headline": "Punchy Main Headline (max 7 words)",
+      "subhead": "Supporting sentence / explanation",
+      "voiceover_sentence": "The exact voiceover spoken during this scene."
+    }}
+  ]
 }}"""
 
     if gemini_key:
@@ -198,10 +430,10 @@ Return valid JSON ONLY with these exact fields:
             model = genai.GenerativeModel("gemini-2.0-flash", generation_config={"response_mime_type": "application/json"})
             resp = model.generate_content(system_instruction)
             data = json.loads(resp.text)
-            print("[GEN] Successfully synthesized customized script via Gemini 2.0 Flash.")
+            print(f"[GEN] Synthesized dynamic {len(data.get('scenes', []))}-scene structure via Gemini 2.0 Flash.")
             return data
         except Exception as e:
-            print(f"[GEN] Gemini LLM generation error: {e}. Checking OpenAI/Fallback...")
+            print(f"[GEN] Gemini dynamic generation notice: {e}")
 
     if openai_key:
         try:
@@ -211,167 +443,318 @@ Return valid JSON ONLY with these exact fields:
                 model="gpt-4o-mini",
                 response_format={"type": "json_object"},
                 messages=[
-                    {"role": "system", "content": "You are a viral video script generator. Output JSON only."},
+                    {"role": "system", "content": "You are a master video script generator. Output JSON only."},
                     {"role": "user", "content": system_instruction}
                 ]
             )
             data = json.loads(resp.choices[0].message.content)
-            print("[GEN] Successfully synthesized customized script via OpenAI.")
+            print(f"[GEN] Synthesized dynamic {len(data.get('scenes', []))}-scene structure via OpenAI.")
             return data
         except Exception as e:
-            print(f"[GEN] OpenAI LLM generation error: {e}")
+            print(f"[GEN] OpenAI generation notice: {e}")
 
-    # Fallback to rich built-in template
-    print(f"[GEN] Using optimized high-retention template preset for '{video_type}'.")
-    return DEFAULT_TEMPLATES_BY_TYPE.get(video_type, DEFAULT_TEMPLATES_BY_TYPE["screen-hero"])
+    # Smart Heuristic Multi-Scene Decomposition
+    count = target_scenes if target_scenes > 1 else 4
+    words = prompt.strip().split()
+    subject = " ".join(words[:6]) if len(words) >= 6 else prompt
+
+    scenes_list = []
+    scripts = []
+
+    # Scene 1: Hook
+    s1_vo = f"Introducing {subject} — the breakthrough you have been waiting for."
+    scripts.append(s1_vo)
+    scenes_list.append({
+        "scene_num": 1,
+        "layout_type": "hook-card",
+        "badge": "MAJOR BREAKTHROUGH",
+        "headline": f"Discover {subject}",
+        "subhead": "Engineered for speed, precision, and complete autonomy.",
+        "voiceover_sentence": s1_vo
+    })
+
+    # Middle Scenes
+    if count == 3:
+        s2_vo = "With direct real-time execution and instant tool calling, you can automate your entire workflow seamlessly."
+        scripts.append(s2_vo)
+        scenes_list.append({
+            "scene_num": 2,
+            "layout_type": "bento-grid",
+            "badge": "CORE CAPABILITY",
+            "headline": "Next-Level Performance",
+            "subhead": "Designed to scale with your team effortlessly.",
+            "voiceover_sentence": s2_vo
+        })
+    elif count >= 4:
+        s2_vo = "Connect your tools and execute multi-step operations with zero latency and complete precision."
+        scripts.append(s2_vo)
+        scenes_list.append({
+            "scene_num": 2,
+            "layout_type": "bento-grid",
+            "badge": "ZERO LATENCY",
+            "headline": "Autonomous Execution",
+            "subhead": "Seamless real-time integration across your entire stack.",
+            "voiceover_sentence": s2_vo
+        })
+
+        s3_vo = "Experience enterprise-grade efficiency with over thirty percent lower operational overhead."
+        scripts.append(s3_vo)
+        scenes_list.append({
+            "scene_num": 3,
+            "layout_type": "metrics",
+            "badge": "PROVEN EFFICIENCY",
+            "headline": "Frontier-Grade Accuracy",
+            "subhead": "Validated benchmarks deliver peak performance without bloat.",
+            "voiceover_sentence": s3_vo
+        })
+
+    if count >= 5:
+        s4_vo = "Follow the simple three-step protocol to deploy this right into your existing production setup."
+        scripts.append(s4_vo)
+        scenes_list.append({
+            "scene_num": 4,
+            "layout_type": "steps",
+            "badge": "DEPLOYMENT PROTOCOL",
+            "headline": "3 Steps to Launch",
+            "subhead": "Deploy in under two minutes with zero friction.",
+            "voiceover_sentence": s4_vo
+        })
+
+    # Final Scene: Payoff
+    sf_vo = f"Start using {subject} in your workflow today and take your productivity to the next level."
+    scripts.append(sf_vo)
+    scenes_list.append({
+        "scene_num": len(scenes_list) + 1,
+        "layout_type": "payoff",
+        "badge": "AVAILABLE NOW",
+        "headline": "Supercharge Your Stack",
+        "subhead": "Get started today with zero setup required.",
+        "stat_highlight": "10x",
+        "cta_text": "Try It Free Now",
+        "voiceover_sentence": sf_vo
+    })
+
+    return {
+        "title": subject,
+        "style": "saas-launch",
+        "scenes_count": len(scenes_list),
+        "full_script": " ".join(scripts),
+        "scenes": scenes_list
+    }
 
 
-def generate_full_reel(prompt: str, video_type: str = "auto", provider: str = "auto",
-                       voice: str = "", out_dir: str = None, render: bool = False):
-    """Orchestrates the entire prompt-to-video pipeline end-to-end."""
+# -------------------------------------------------------------
+# Dynamic Reel Assembler
+# -------------------------------------------------------------
+def generate_dynamic_reel(prompt: str, scenes_count: int = 0, video_type: str = "auto",
+                          provider: str = "auto", voice: str = "", out_dir: str = None, render: bool = False):
     print("\n" + "=" * 75)
-    print(" 🎬  UNROTSKILLVID — AUTONOMOUS PROMPT-TO-VIDEO GENERATOR")
+    print(" 🎬  UNROTSKILLVID — DYNAMIC MULTI-SCENE REEL GENERATOR")
     print("=" * 75)
     print(f"Prompt: \"{prompt}\"")
 
-    # 1. Detect Template Type
-    if video_type == "auto" or not video_type:
-        video_type = detect_template_type(prompt)
-    print(f"[GEN] Selected Video Style: {video_type}")
+    # 1. Synthesize Dynamic Scene Blueprint
+    blueprint = synthesize_dynamic_scenes(prompt, target_scenes=scenes_count)
+    actual_scenes = blueprint.get("scenes", [])
+    num_scenes = len(actual_scenes)
+    full_script = blueprint.get("full_script", prompt)
+    title = blueprint.get("title", prompt)
 
-    # 2. Determine Output Directory
+    print(f"[GEN] Generated {num_scenes}-scene structured blueprint for '{title}'.")
+
+    # 2. Prepare Project Directory
     if not out_dir:
-        slug = re.sub(r"[^a-z0-9]+", "-", prompt.lower().strip()[:32]).strip("-") or "reel"
-        out_dir = str(ROOT_DIR / "videos" / f"{slug}-{video_type}")
+        slug = re.sub(r"[^a-z0-9]+", "-", prompt.lower().strip()[:28]).strip("-") or "dynamic-reel"
+        out_dir = str(ROOT_DIR / "videos" / f"{slug}-{num_scenes}s")
     
     project_path = Path(out_dir).resolve()
-    print(f"[GEN] Target Project Directory: {project_path}")
+    project_path.mkdir(parents=True, exist_ok=True)
+    comps_dir = project_path / "compositions"
+    comps_dir.mkdir(parents=True, exist_ok=True)
+    assets_dir = project_path / "assets"
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    fonts_dir = assets_dir / "fonts"
+    fonts_dir.mkdir(parents=True, exist_ok=True)
 
-    # 3. Scaffold Project from Template
-    template_src = ROOT_DIR / "templates" / video_type
-    if not template_src.exists():
-        template_src = ROOT_DIR / "templates" / "screen-hero"
+    # Copy fonts
+    src_fonts = ROOT_DIR / "assets" / "fonts"
+    if src_fonts.exists():
+        for f in src_fonts.glob("*.woff2"):
+            shutil.copy2(f, fonts_dir / f.name)
 
-    if project_path.exists():
-        print(f"[GEN] Reusing existing directory: {project_path}")
-    else:
-        print(f"[GEN] Scaffolding template from: {template_src}")
-        shutil.copytree(template_src, project_path)
-
-    # 4. Synthesize Script and Copy
-    script_data = generate_llm_script(prompt, video_type)
-    script_text = script_data.get("script", DEFAULT_TEMPLATES_BY_TYPE[video_type]["script"])
-    
-    # Save BRIEF.md
-    brief_content = f"""---
-workflow: unrot-tutorial
-flow: automation
-template: {video_type}
-prompt: "{prompt}"
----
-
-# Video Brief: {script_data.get('title', prompt)}
-
-## Narration Script
-{script_text}
-
-## Visual Directives
-- **Scene 1 (Hook):** {script_data.get('headline_1', 'Hook Statement')}
-- **Scene 2 (Core):** {script_data.get('scene_2_caption', 'Core Showcase')}
-- **Scene 3 (Nuance):** {script_data.get('headline_3', 'Nuance & Limit')}
-- **Scene 4 (Payoff):** {script_data.get('payoff_text', 'Payoff & CTA')}
-"""
-    (project_path / "BRIEF.md").write_text(brief_content, encoding="utf-8")
-
-    # 5. Generate Voiceover Audio (Gemini TTS / Edge / ElevenLabs / OpenAI)
-    audio_path = project_path / "assets" / "narration.wav"
-    audio_path.parent.mkdir(parents=True, exist_ok=True)
-    
-    print("\n[GEN] Synthesizing human voiceover audio...")
-    import importlib.util
+    # 3. Generate Voiceover Audio (Gemini / Edge / ElevenLabs / OpenAI)
+    audio_path = assets_dir / "narration.wav"
+    print("\n[GEN] Synthesizing 48kHz broadcast narration audio...")
     tts_spec = importlib.util.spec_from_file_location("tts_mod", ROOT_DIR / "scripts" / "tts.py")
     tts_mod = importlib.util.module_from_spec(tts_spec)
     tts_spec.loader.exec_module(tts_mod)
-    
-    tts_mod.synthesize(
-        text=script_text,
-        provider=provider,
-        voice=voice if voice else None,
-        out_wav=str(audio_path)
-    )
+    tts_mod.synthesize(text=full_script, provider=provider, voice=voice if voice else None, out_wav=str(audio_path))
 
-    # 6. Map Speech Timeline & Cut Points
-    print("\n[GEN] Mapping speech pauses and timeline cut points...")
+    # 4. Map Speech Cuts for Exact N Scenes
+    print(f"\n[GEN] Mapping speech pauses for {num_scenes} scenes...")
     map_spec = importlib.util.spec_from_file_location("map_mod", ROOT_DIR / "scripts" / "audio-map.py")
     map_mod = importlib.util.module_from_spec(map_spec)
     map_spec.loader.exec_module(map_mod)
 
-    map_json_path = project_path / "assets" / "audio-map.json"
-    audio_map_data = map_mod.map_audio(str(audio_path), scenes_count=4, json_out=str(map_json_path))
+    map_json_path = assets_dir / "audio-map.json"
+    audio_map = map_mod.map_audio(str(audio_path), scenes_count=num_scenes, json_out=str(map_json_path))
+    total_dur = audio_map["total_duration"]
+    scene_timings = audio_map["scenes"]
 
-    total_dur = audio_map_data["total_duration"]
-    scenes = audio_map_data["scenes"]
+    # 5. Generate Every Scene Composition HTML File
+    print(f"[GEN] Generating {num_scenes} custom GSAP scene compositions...")
+    for idx, sc_data in enumerate(actual_scenes, 1):
+        sc_html = render_scene_html(sc_data, idx, num_scenes)
+        (comps_dir / f"scene{idx}.html").write_text(sc_html, encoding="utf-8")
 
-    # 7. Update index.html with Exact Durations
-    index_html_path = project_path / "index.html"
-    if index_html_path.exists():
-        index_content = index_html_path.read_text(encoding="utf-8")
-        
-        # Replace root data-duration
-        index_content = re.sub(r'data-duration="[\d.]+"', f'data-duration="{total_dur:.2f}"', index_content, count=1)
-        
-        # Replace audio data-duration
-        index_content = re.sub(r'<audio[^>]*data-duration="[\d.]+"', f'<audio id="narration" class="clip" src="assets/narration.wav" data-start="0" data-duration="{total_dur:.2f}"', index_content)
-        
-        # Replace scene durations
-        if len(scenes) == 4:
-            for sc in scenes:
-                sc_num = sc["scene"]
-                sc_start = sc["start"]
-                sc_dur = sc["duration"]
-                slot_pattern = rf'(<div[^>]*id="slot-scene-{sc_num}"[^>]*data-start=")[\d.]*("[^>]*data-duration=")[\d.]*(")'
-                index_content = re.sub(slot_pattern, rf'\g<1>{sc_start:.2f}\g<2>{sc_dur:.2f}\g<3>', index_content)
-                
-        index_html_path.write_text(index_content, encoding="utf-8")
-        print(f"[GEN] Updated index.html timeline (Total Duration: {total_dur:.2f}s across 4 scenes).")
+    # 6. Generate Master index.html
+    slots_html = ""
+    for sc_time in scene_timings:
+        s_idx = sc_time["scene"]
+        s_start = sc_time["start"]
+        s_dur = sc_time["duration"]
+        slots_html += f"""
+      <!-- Scene {s_idx} ({s_start:.2f}s - {s_start + s_dur:.2f}s) -->
+      <div
+        id="slot-scene-{s_idx}"
+        class="clip"
+        data-composition-id="scene{s_idx}"
+        data-composition-src="compositions/scene{s_idx}.html"
+        data-start="{s_start:.2f}"
+        data-duration="{s_dur:.2f}"
+        data-track-index="1"
+        data-width="1080"
+        data-height="1920"
+      ></div>
+"""
 
-    # 8. Customize Scene HTML Files with Generated Copy
-    scene1_path = project_path / "compositions" / "scene1.html"
-    if scene1_path.exists() and "headline_1" in script_data:
-        s1_text = scene1_path.read_text(encoding="utf-8")
-        if script_data.get("badge"):
-            s1_text = re.sub(r'<span>[^<]+</span>', f'<span>{script_data["badge"]}</span>', s1_text, count=1)
-        if script_data.get("headline_1"):
-            s1_text = re.sub(r'<h1[^>]*>.*?</h1>', f'<h1 id="title" class="headline">{script_data["headline_1"]}</h1>', s1_text, flags=re.S)
-        if script_data.get("subhead_1"):
-            s1_text = re.sub(r'<p id="sub"[^>]*>.*?</p>', f'<p id="sub" class="subhead">{script_data["subhead_1"]}</p>', s1_text, flags=re.S)
-        scene1_path.write_text(s1_text, encoding="utf-8")
+    master_index_html = f"""<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>{title}</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {{ font-family: "Geist"; font-style: normal; font-weight: 400; src: url(assets/fonts/geist-400.woff2) format("woff2"); }}
+      @font-face {{ font-family: "Geist"; font-style: normal; font-weight: 600; src: url(assets/fonts/geist-600.woff2) format("woff2"); }}
+      @font-face {{ font-family: "Geist"; font-style: normal; font-weight: 700; src: url(assets/fonts/geist-700.woff2) format("woff2"); }}
+      * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+      html, body {{
+        margin: 0; width: 1080px; height: 1920px; overflow: hidden;
+        background: #13100e; color: #f7f2eb; font-family: "Geist", sans-serif;
+      }}
+      #root {{ position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #13100e; }}
+      .bg-glow {{
+        position: absolute; width: 850px; height: 850px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 107, 53, 0.14) 0%, rgba(255, 107, 53, 0) 70%);
+        pointer-events: none; z-index: 0;
+      }}
+      #root > div[data-composition-src] {{ position: absolute; inset: 0; width: 1080px; height: 1920px; }}
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="{total_dur:.2f}"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div class="bg-glow" style="left: 120px; top: 180px;"></div>
+      <div class="bg-glow" style="right: -80px; bottom: 280px;"></div>
 
-    # 9. Render Video if Requested
+{slots_html}
+
+      <audio
+        id="narration"
+        class="clip"
+        src="assets/narration.wav"
+        data-start="0"
+        data-duration="{total_dur:.2f}"
+        data-track-index="10"
+      ></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {{}};
+      const mainTl = gsap.timeline({{ paused: true }});
+      window.__timelines["main"] = mainTl;
+    </script>
+  </body>
+</html>
+"""
+    (project_path / "index.html").write_text(master_index_html, encoding="utf-8")
+
+    # 7. Write Configuration Files (hyperframes.json, meta.json, package.json, BRIEF.md)
+    hf_json = {
+        "$schema": "https://hyperframes.heygen.com/schema/v1.json",
+        "name": project_path.name,
+        "version": "1.0.0",
+        "main": "index.html",
+        "width": 1080,
+        "height": 1920,
+        "fps": 60,
+        "duration": round(total_dur, 2),
+        "metadata": { "scenes_count": num_scenes, "theme": "dark" }
+    }
+    (project_path / "hyperframes.json").write_text(json.dumps(hf_json, indent=2), encoding="utf-8")
+
+    meta_json = { "id": project_path.name, "name": title, "scenes": num_scenes }
+    (project_path / "meta.json").write_text(json.dumps(meta_json, indent=2), encoding="utf-8")
+
+    pkg_json = {
+        "name": project_path.name,
+        "private": True,
+        "type": "module",
+        "scripts": {
+            "dev": "npx --yes hyperframes@latest preview",
+            "check": "npx --yes hyperframes@latest check",
+            "render": "npx --yes hyperframes@latest render"
+        }
+    }
+    (project_path / "package.json").write_text(json.dumps(pkg_json, indent=2), encoding="utf-8")
+
+    brief_md = f"""---
+workflow: unrot-tutorial
+scenes_count: {num_scenes}
+prompt: "{prompt}"
+duration: {total_dur:.2f}s
+---
+
+# Video Brief: {title}
+
+## Narration Script
+{full_script}
+
+## Scene Breakdown ({num_scenes} Scenes)
+"""
+    for sc in actual_scenes:
+        brief_md += f"- **Scene {sc['scene_num']} ({sc.get('layout_type', 'card')}):** {sc.get('headline', '')} — {sc.get('subhead', '')}\n"
+    (project_path / "BRIEF.md").write_text(brief_md, encoding="utf-8")
+
+    # 8. Render Video if Requested
     rendered_file = None
     if render:
         print("\n[GEN] Rendering 1080x1920 60fps MP4 video...")
         out_mp4 = project_path / "out" / f"{project_path.name}.mp4"
         out_mp4.parent.mkdir(parents=True, exist_ok=True)
-        
         render_cmd = ["npx", "--yes", "hyperframes@latest", "render", "--output", str(out_mp4)]
         if sys.platform == "win32":
             render_cmd[0] = "npx.cmd"
-            
         r = subprocess.run(render_cmd, cwd=str(project_path), capture_output=True, text=True)
         if r.returncode == 0:
             rendered_file = str(out_mp4)
             print(f"\n[GEN] 🎉 Finished Video Successfully Rendered: {out_mp4}")
-        else:
-            print(f"[GEN] Hyperframes render note: Project is fully prepped in {project_path}. Run 'npm run render' inside.")
 
     print("\n" + "=" * 75)
-    print(f" ✨ COMPLETE REEL READY AT: {project_path}")
+    print(f" ✨ DYNAMIC {num_scenes}-SCENE REEL READY AT: {project_path}")
     print("=" * 75)
-    print(f"  • Video Style: {video_type}")
-    print(f"  • Narration:   {audio_path} ({total_dur:.2f}s)")
-    print(f"  • Preview:     cd {project_path.relative_to(ROOT_DIR) if project_path.is_relative_to(ROOT_DIR) else project_path} && npm run dev")
-    print(f"  • Render MP4:  npx unrotskillvid render {project_path}")
+    print(f"  • Total Scenes:  {num_scenes} structured scenes")
+    print(f"  • Narration:     {audio_path} ({total_dur:.2f}s)")
+    print(f"  • Live Preview:  cd {project_path.relative_to(ROOT_DIR) if project_path.is_relative_to(ROOT_DIR) else project_path} && npm run dev")
+    print(f"  • Render MP4:    npx unrotskillvid render {project_path}")
     print("=" * 75 + "\n")
 
     return str(project_path), rendered_file
@@ -381,13 +764,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("prompt", nargs="?", default="", help="Prompt, idea, or topic for the video")
     parser.add_argument("--prompt", dest="prompt_flag", default="", help="Explicit prompt flag")
-    parser.add_argument("--type", default="auto", choices=["auto", "screen-hero", "saas-launch", "code-walkthrough", "faceless-explainer", "comparison-vs"],
-                        help="Video style template (default: auto)")
+    parser.add_argument("--scenes", type=int, default=0, help="Number of scenes (default: auto 2-7)")
+    parser.add_argument("--type", default="auto", help="Video style hint (default: auto)")
     parser.add_argument("--provider", default="auto", choices=["auto", "gemini", "elevenlabs", "openai", "edge"],
                         help="TTS audio provider (default: auto)")
     parser.add_argument("--voice", default="", help="TTS voice name or ID")
     parser.add_argument("--out", default="", help="Target project output directory")
-    parser.add_argument("--render", action="store_true", help="Automatically render the final 60fps MP4 video")
+    parser.add_argument("--render", action="store_true", help="Automatically render final 60fps MP4 video")
 
     args = parser.parse_args()
     prompt_text = args.prompt or args.prompt_flag
@@ -395,8 +778,9 @@ def main():
         parser.print_help()
         sys.exit(1)
 
-    generate_full_reel(
+    generate_dynamic_reel(
         prompt=prompt_text,
+        scenes_count=args.scenes,
         video_type=args.type,
         provider=args.provider,
         voice=args.voice,

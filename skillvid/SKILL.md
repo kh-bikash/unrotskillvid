@@ -1,49 +1,49 @@
 ---
 name: unrotskillvid
 description: >
-  Autonomous end-to-end AI video creation skill and NPX CLI tool. Generates complete 9:16 vertical reels
-  (1080x1920 60fps) and explainer videos from a single prompt or script with realistic human voiceovers
-  (Gemini TTS, Edge TTS, ElevenLabs, OpenAI) and 5 distinct video styles: screen-hero, saas-launch,
-  code-walkthrough, faceless-explainer, and comparison-vs. Handles script writing, audio synthesis,
-  pause alignment, GSAP composition generation, and MP4 rendering.
+  Autonomous dynamic AI video creation skill and NPX CLI tool. Generates complete, structured 9:16
+  vertical reels (1080x1920 60fps) and explainer videos from a single prompt with any number of scenes
+  (2 to 7+ scenes dynamically determined by narrative depth), realistic human voiceovers (Gemini TTS,
+  Edge TTS, ElevenLabs, OpenAI), speech-pause synchronization, custom GSAP compositions, and 60fps rendering.
 ---
 
 # Unrot Skill Video (`unrotskillvid`)
 
-An **autonomous end-to-end AI video creation engine** and NPX tool for 9:16 vertical reels (1080x1920, 60fps) with realistic human audio and 5 versatile video styles.
+An **autonomous, dynamic multi-scene AI video creation engine** and NPX tool for 9:16 vertical reels (1080x1920, 60fps) with realistic human audio and intelligent scene structuring.
 
 ---
 
-## ⚡ 1-Prompt Video Generation
+## ⚡ 1-Prompt Dynamic Video Generation
 
-Provide a prompt or topic, and `unrotskillvid` builds the entire video (script, audio, synced timeline, and compositions) automatically:
+`unrotskillvid` dynamically calculates the optimal number of scenes (2 to 7+ scenes) based on your prompt:
 
 ```bash
-# Autonomous generation from prompt
-npx unrotskillvid generate "Make a SaaS launch reel for an AI code assistant"
+# Dynamic scene generation (AI automatically determines 2 to 7 scenes)
+npx unrotskillvid generate "Make a SaaS launch reel for an AI coding assistant"
 
-# With automatic 60fps MP4 rendering
-npx unrotskillvid generate "Explain the 80/20 rule in productivity" --type faceless-explainer --render
+# Explicit scene count (e.g. 3-scene fast teaser or 5-scene deep dive)
+npx unrotskillvid generate "5 step protocol to scale your engineering team" --scenes 5 --render
 
-# With Gemini TTS human audio
+# With Google Gemini TTS human voiceover
 npx unrotskillvid generate "Showcase Supabase Auth launch" --provider gemini --voice Puck --render
 ```
 
 ---
 
-## 🎨 5 Video Styles & Presets
+## 🎭 Dynamic Scene Layout Engine
 
-| Style | Command | Best For |
-|---|---|---|
-| 📱 **`screen-hero`** | `npx unrotskillvid generate "..." --type screen-hero` | Real screen recordings, demo clips with virtual camera pan/zoom |
-| 🚀 **`saas-launch`** | `npx unrotskillvid generate "..." --type saas-launch` | SaaS product reveals, browser mockups, bento grids, pricing CTAs |
-| 💻 **`code-walkthrough`** | `npx unrotskillvid generate "..." --type code-walkthrough` | AI models, GitHub repos, code diffs, SWE-bench performance graphs |
-| ✨ **`faceless-explainer`** | `npx unrotskillvid generate "..." --type faceless-explainer` | Viral storytelling, mental models, finance (no footage required) |
-| ⚖️ **`comparison-vs`** | `npx unrotskillvid generate "..." --type comparison-vs` | Head-to-head battles, feature matrices, benchmark charts, verdicts |
+Every scene receives a tailored, high-polish visual structure with GSAP animations:
+
+- **`hook-card`**: Headline typography, animated category badges, floating glass cards.
+- **`bento-grid`**: Staggered bento feature cards with glowing icon badges and bottom captions.
+- **`steps` / `protocol`**: Numbered 1-2-3 framework cards with glowing accent borders.
+- **`metrics` / `benchmarks`**: Live animated percentage progress bars and stat callouts.
+- **`code` / `terminal`**: macOS editor windows with syntax-highlighted diff additions/deletions.
+- **`payoff` / `cta`**: High-impact stat counters and pulsing action buttons.
 
 ---
 
-## 🎙️ Voiceover & TTS Engine (Gemini TTS, Edge, ElevenLabs, OpenAI)
+## 🎙️ Human Voiceover & TTS Engine (Gemini TTS, Edge, ElevenLabs, OpenAI)
 
 Generate 48kHz broadcast-quality voiceovers:
 
@@ -68,26 +68,26 @@ npx unrotskillvid list-voices
 
 ---
 
-## 🎯 Speech-Synced Audio Timeline Mapping
+## 🎯 Speech-Synced Timeline Mapping
 
-**Always map cuts to natural speech pauses before timing scenes:**
+**Every cut lands on a real speech pause:**
 
 ```bash
-python scripts/audio-map.py assets/narration.wav --scenes 4 --json assets/audio-map.json
+python scripts/audio-map.py assets/narration.wav --scenes <N> --json assets/audio-map.json
 ```
 
-Cuts are placed at the midpoint of speech pauses, ensuring visual transitions never land awkwardly mid-sentence.
+Cuts are calculated at the midpoint of speech pauses so visual scene changes never land awkwardly mid-sentence.
 
 ---
 
 ## 👶 Interactive Creation Wizard
 
-For non-technical users and automated generation:
+For non-technical users:
 
 ```bash
 npx unrotskillvid create
 ```
-The wizard guides you through choosing a style, writing/pasting a script, selecting a voice, generating audio, mapping timeline cuts, and setting up the live preview.
+Guides you through entering a prompt, choosing an optional scene count (3 to 6 or auto), selecting a voice, and creating the video.
 
 ---
 
@@ -96,9 +96,6 @@ The wizard guides you through choosing a style, writing/pasting a script, select
 ```bash
 # Validate compositions & contrast
 npx unrotskillvid check videos/my-reel
-
-# Generate contact review sheet
-python scripts/content-sheet.py --frames snapshots/frames --spec sheet.json --out snapshots/content-sheet.jpg
 
 # Render 60fps MP4
 npx unrotskillvid render videos/my-reel

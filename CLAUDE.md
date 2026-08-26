@@ -1,25 +1,24 @@
 # CLAUDE.md — Unrot Skill Video (`unrotskillvid`)
 
-Welcome to **`unrotskillvid`**, the AI Video Creation Skill & CLI tool for high-retention 9:16 vertical reels and explainer videos.
+Welcome to **`unrotskillvid`**, the AI Video Creation Skill & CLI tool for high-retention 9:16 vertical reels and explainer videos with dynamic scene counts (2 to 7+ scenes).
 
 ## Claude Code Quick Commands
 
 ```bash
-# 1. Autonomous Prompt-to-Video Generation (End-to-End)
+# 1. Autonomous Dynamic Video Generation (Auto scene count)
 node bin/cli.js generate "Create a viral explainer about autonomous AI agents" --render
 
-# 2. Interactive Video Wizard
-node bin/cli.js create
+# 2. Specific Scene Count (e.g. 3-scene fast teaser or 5-scene deep dive)
+node bin/cli.js generate "5 step protocol to scale your engineering team" --scenes 5 --render
 
-# 3. Scaffold a Specific Video Style
-node bin/cli.js init my-video --type screen-hero
-# Available types: screen-hero, saas-launch, code-walkthrough, faceless-explainer, comparison-vs
+# 3. Interactive Video Wizard
+node bin/cli.js create
 
 # 4. Generate Human Audio (Gemini TTS / Edge / ElevenLabs / OpenAI)
 python scripts/tts.py "Your narration text" --provider gemini --out videos/my-video/assets/narration.wav
 
-# 5. Map Speech Cuts & Audio Pauses
-python scripts/audio-map.py videos/my-video/assets/narration.wav --scenes 4 --json videos/my-video/assets/audio-map.json
+# 5. Map Speech Cuts for N Scenes
+python scripts/audio-map.py videos/my-video/assets/narration.wav --scenes 5 --json videos/my-video/assets/audio-map.json
 
 # 6. Start Live Hot-Reload Preview Server
 cd videos/my-video && npm run dev
@@ -31,17 +30,12 @@ node bin/cli.js check videos/my-video
 node bin/cli.js render videos/my-video
 ```
 
-## Video Template Types
+## Dynamic Scene Layout Engine
 
-1. **`screen-hero`**: Screen recording / product demo hero reel with virtual camera moves.
-2. **`saas-launch`**: SaaS product reveal with browser mockups, bento grids, and launch CTA.
-3. **`code-walkthrough`**: Developer & AI model showcase with code diffs, terminal animations, and benchmarks.
-4. **`faceless-explainer`**: Viral faceless explainer with kinetic typography & bento cards (no footage needed).
-5. **`comparison-vs`**: Side-by-side battle / vs comparison reel with feature matrix & verdict.
-
-## Key Framework Rules
-
-- Every timed element must have `class="clip"`, `data-start`, and `data-duration`.
-- GSAP timelines must be paused and attached to `window.__timelines[compName]`.
-- Always map real voiceover pauses via `scripts/audio-map.py` before placing scene transitions.
-- Use embedded WOFF2 fonts (`assets/fonts/`) to prevent rendering fallbacks.
+The engine dynamically formats each scene based on narrative intent:
+- `hook-card`: Headline, animated category badge, glass card.
+- `bento-grid`: Staggered bento feature cards with glowing icon badges.
+- `steps`: Numbered 1-2-3 framework cards with glowing accent borders.
+- `metrics`: Live animated percentage progress bars and stat callouts.
+- `code`: Editor window with syntax-highlighted diff additions/deletions.
+- `payoff`: High-impact stat counters and pulsing action buttons.

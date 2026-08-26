@@ -226,9 +226,10 @@ async function renderVideo(projectDir, outMp4 = null) {
   await runCommand('npx', renderArgs, { cwd: dir });
 }
 
-async function generateFromPrompt(promptText, type = 'auto', provider = 'auto', voice = '', outDir = '', render = false) {
+async function generateFromPrompt(promptText, scenes = 0, type = 'auto', provider = 'auto', voice = '', outDir = '', render = false) {
   const pythonScript = path.join(ROOT_DIR, 'scripts', 'generate-reel.py');
   const args = [pythonScript, promptText, '--type', type, '--provider', provider];
+  if (scenes > 0) args.push('--scenes', String(scenes));
   if (voice) args.push('--voice', voice);
   if (outDir) args.push('--out', outDir);
   if (render) args.push('--render');
@@ -247,7 +248,16 @@ async function createWizard() {
   const promptAns = await promptUser(`${c.bright}What is your video about? (Enter a topic or prompt): ${c.reset}`);
   const userPrompt = promptAns.trim() || 'Create a viral tech explainer about autonomous AI agents';
 
-  console.log(`\n${c.bright}2. Choose your video style (or let AI decide):${c.reset}`);
+  console.log(`\n${c.bright}2. Choose number of scenes (or let AI decide dynamically):${c.reset}`);
+  console.log(`   [0] ${c.white}auto${c.reset}  - AI dynamically calculates optimal scene count`);
+  console.log(`   [3] ${c.cyan}3 scenes${c.reset} - Fast teaser / short announcement (15-25s)`);
+  console.log(`   [4] ${c.orange}4 scenes${c.reset} - Standard narrative explainer (30-45s)`);
+  console.log(`   [5] ${c.blue}5 scenes${c.reset} - Multi-step framework / deep dive (45-60s)`);
+  console.log(`   [6] ${c.green}6 scenes${c.reset} - Full comprehensive tutorial (60s+)`);
+  const sceneChoice = await promptUser(`${c.bright}Select scenes [0, 3-6] (default 0): ${c.reset}`);
+  const scenesCount = parseInt(sceneChoice, 10) || 0;
+
+  console.log(`\n${c.bright}3. Choose your video style (or auto-detect):${c.reset}`);
   console.log(`   [0] ${c.white}auto${c.reset}              - Automatically match best style to your prompt`);
   console.log(`   [1] ${c.orange}screen-hero${c.reset}       - Screen Recording / Product Demo with virtual camera`);
   console.log(`   [2] ${c.cyan}saas-launch${c.reset}       - SaaS Launch / Feature Showcase & Bento Grid`);
@@ -266,7 +276,7 @@ async function createWizard() {
   };
   const chosenType = typeMap[typeChoice] || 'auto';
 
-  console.log(`\n${c.bright}3. Choose TTS Voice Provider:${c.reset}`);
+  console.log(`\n${c.bright}4. Choose TTS Voice Provider:${c.reset}`);
   console.log(`   [1] ${c.orange}Gemini TTS${c.reset}  (Google Generative AI audio - Natural human voices)`);
   console.log(`   [2] ${c.green}Edge TTS${c.reset}    (Free, zero-config neural voices - Instant high quality)`);
   console.log(`   [3] ${c.magenta}ElevenLabs${c.reset}  (Studio quality voice cloning)`);
@@ -275,8 +285,8 @@ async function createWizard() {
   const provMap = { '1': 'gemini', '2': 'edge', '3': 'elevenlabs', '4': 'openai' };
   const chosenProvider = provMap[provChoice] || 'edge';
 
-  console.log(`\n${c.bright}🚀 Generating end-to-end video reel from your prompt...${c.reset}\n`);
-  await generateFromPrompt(userPrompt, chosenType, chosenProvider, '', '', false);
+  console.log(`\n${c.bright}🚀 Generating structured video reel from your prompt...${c.reset}\n`);
+  await generateFromPrompt(userPrompt, scenesCount, chosenType, chosenProvider, '', '', false);
 }
 
 // -------------------------------------------------------------
@@ -290,17 +300,18 @@ async function main() {
     banner();
     console.log(`
 ${c.bright}USAGE:${c.reset}
-  ${c.cyan}npx unrotskillvid generate "<prompt>" [--render]${c.reset}  Autonomous prompt-to-video pipeline
-  ${c.cyan}npx unrotskillvid create${c.reset}                            Interactive prompt-to-video wizard
-  ${c.cyan}npx unrotskillvid init <name> [--type <t>]${c.reset}          Scaffold a new video project
-  ${c.cyan}npx unrotskillvid audio <text|file> [--provider <p>]${c.reset}  Generate natural narration audio
-  ${c.cyan}npx unrotskillvid map <audio.wav> [--scenes <n>]${c.reset}      Map speech pauses and scene cuts
-  ${c.cyan}npx unrotskillvid render [dir] [--out <file>]${c.reset}         Render video to 1080x1920 60fps MP4
-  ${c.cyan}npx unrotskillvid list-types${c.reset}                        List all 5 available video styles
-  ${c.cyan}npx unrotskillvid list-voices${c.reset}                       List all available TTS voices
-  ${c.cyan}npx unrotskillvid check [dir]${c.reset}                         Run lint and layout checks
+  ${c.cyan}npx unrotskillvid generate "<prompt>" [--scenes <n>] [--render]${c.reset}  Dynamic prompt-to-video pipeline
+  ${c.cyan}npx unrotskillvid create${c.reset}                                          Interactive prompt-to-video wizard
+  ${c.cyan}npx unrotskillvid init <name> [--type <t>]${c.reset}                        Scaffold a new video project
+  ${c.cyan}npx unrotskillvid audio <text|file> [--provider <p>]${c.reset}                Generate natural narration audio
+  ${c.cyan}npx unrotskillvid map <audio.wav> [--scenes <n>]${c.reset}                    Map speech pauses and scene cuts
+  ${c.cyan}npx unrotskillvid render [dir] [--out <file>]${c.reset}                       Render video to 1080x1920 60fps MP4
+  ${c.cyan}npx unrotskillvid list-types${c.reset}                                      List all available video styles
+  ${c.cyan}npx unrotskillvid list-voices${c.reset}                                     List all available TTS voices
+  ${c.cyan}npx unrotskillvid check [dir]${c.reset}                                       Run lint and layout checks
 
 ${c.bright}OPTIONS:${c.reset}
+  --scenes      Number of structured scenes (default: auto 2-7)
   --type        Video template style (screen-hero, saas-launch, code-walkthrough, faceless-explainer, comparison-vs)
   --provider    TTS provider (gemini, elevenlabs, openai, edge)
   --voice       Voice name or Voice ID
@@ -316,6 +327,8 @@ ${c.bright}OPTIONS:${c.reset}
       console.error(`${c.red}Error: Prompt required. Example: npx unrotskillvid generate "Make a SaaS launch reel" --render${c.reset}`);
       process.exit(1);
     }
+    const scenesIdx = args.indexOf('--scenes');
+    const scenes = scenesIdx !== -1 && args[scenesIdx + 1] ? parseInt(args[scenesIdx + 1], 10) : 0;
     const typeIdx = args.indexOf('--type');
     const type = typeIdx !== -1 && args[typeIdx + 1] ? args[typeIdx + 1] : 'auto';
     const provIdx = args.indexOf('--provider');
@@ -325,7 +338,7 @@ ${c.bright}OPTIONS:${c.reset}
     const outIdx = args.indexOf('--out');
     const outDir = outIdx !== -1 && args[outIdx + 1] ? args[outIdx + 1] : '';
     const render = args.includes('--render');
-    await generateFromPrompt(promptText, type, provider, voice, outDir, render);
+    await generateFromPrompt(promptText, scenes, type, provider, voice, outDir, render);
     return;
   }
 

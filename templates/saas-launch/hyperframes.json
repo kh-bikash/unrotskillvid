@@ -1,0 +1,14 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/v1.json",
+  "name": "saas-launch",
+  "version": "1.0.0",
+  "main": "index.html",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "duration": 40.0,
+  "metadata": {
+    "type": "saas-launch",
+    "theme": "dark"
+  }
+}

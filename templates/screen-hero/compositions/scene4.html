@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 4: Payoff & Call to Action</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f7f2eb;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 200px 72px 140px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .payoff-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 28px;
+        background: rgba(255, 107, 53, 0.12);
+        border: 1px solid rgba(255, 107, 53, 0.35);
+        border-radius: 9999px;
+        color: #ff6b35;
+        font-size: 24px;
+        font-weight: 600;
+        width: fit-content;
+      }
+
+      .payoff-card {
+        background: #1f1915;
+        border: 1px solid #3b332b;
+        border-radius: 36px;
+        padding: 56px 48px;
+        text-align: center;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+        margin: 40px 0;
+      }
+
+      .big-stat {
+        font-size: 110px;
+        font-weight: 700;
+        line-height: 1.0;
+        color: #ff6b35;
+        margin-bottom: 16px;
+      }
+
+      .stat-desc {
+        font-size: 32px;
+        font-weight: 600;
+        color: #e8ded4;
+      }
+
+      .cta-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 32px;
+        background: #ff6b35;
+        border-radius: 24px;
+        color: #ffffff;
+        font-size: 34px;
+        font-weight: 700;
+        box-shadow: 0 20px 40px rgba(255, 107, 53, 0.4);
+      }
+
+      .closing-text {
+        text-align: center;
+        font-size: 28px;
+        color: #a79c91;
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene4" class="clip" data-start="35.00" data-duration="10.00">
+      <div class="scene-wrap">
+        <div>
+          <div id="payoff-tag" class="payoff-badge">
+            <span>READY TODAY · OPEN SOURCE</span>
+          </div>
+
+          <div id="stat-box" class="payoff-card">
+            <div class="big-stat">68.1%</div>
+            <div class="stat-desc">SWE-bench Verified Score</div>
+          </div>
+        </div>
+
+        <div id="cta-section">
+          <div class="cta-button">
+            Try it in your workflow now
+          </div>
+          <p class="closing-text">Available under permissive MIT license</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#payoff-tag", { opacity: 0, scale: 0.9, duration: 0.6, ease: "power2.out" }, 0.2)
+        .from("#stat-box", { opacity: 0, scale: 0.92, y: 30, duration: 0.8, ease: "back.out(1.3)" }, 0.5)
+        .from("#cta-section", { opacity: 0, y: 40, duration: 0.7, ease: "power2.out" }, 0.9)
+        .to(".cta-button", { scale: 1.03, repeat: 1, yoyo: true, duration: 1.5, ease: "sine.inOut" }, 1.8);
+
+      window.__timelines["scene4"] = tl;
+    </script>
+  </body>
+</html>

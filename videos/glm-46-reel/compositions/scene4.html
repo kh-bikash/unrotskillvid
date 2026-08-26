@@ -1,0 +1,330 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 400;
+          font-display: block;
+          src: url(assets/fonts/geist-400.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 600;
+          font-display: block;
+          src: url(assets/fonts/geist-600.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 700;
+          font-display: block;
+          src: url(assets/fonts/geist-700.woff2) format("woff2");
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #13100e;
+          color: #f7f2eb;
+          font-family: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+          padding: 100px 56px 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          box-sizing: border-box;
+        }
+
+        .payoff-top-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .benchmark-card {
+          background: #1b1511;
+          border: 1px solid #3a3129;
+          border-radius: 32px;
+          padding: 36px;
+          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          box-sizing: border-box;
+        }
+
+        .card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #29221c;
+        }
+
+        .card-header-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .card-dot {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #3a3129;
+        }
+
+        .card-title {
+          margin-left: 8px;
+          font-size: 22px;
+          font-weight: 600;
+          color: #f7f2eb;
+        }
+
+        .card-badge {
+          font-size: 18px;
+          font-weight: 600;
+          color: #ff6b35;
+          background: rgba(255, 107, 53, 0.12);
+          border: 1px solid rgba(255, 107, 53, 0.3);
+          padding: 4px 14px;
+          border-radius: 100px;
+        }
+
+        .bench-item {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .bench-labels {
+          display: flex;
+          justify-content: space-between;
+          font-size: 21px;
+          font-weight: 600;
+          color: #f7f2eb;
+        }
+
+        .bench-track {
+          width: 100%;
+          height: 18px;
+          background: #27211b;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+
+        .bench-fill {
+          height: 100%;
+          background: #ff6b35;
+          border-radius: 10px;
+          width: 0%;
+        }
+
+        .bench-fill.sonnet {
+          background: #8b5cf6;
+        }
+
+        .bench-fill.green {
+          background: #10b981;
+        }
+
+        /* Ecosystem chips */
+        .ecosystem-container {
+          background: #171310;
+          border: 1px solid #2e2620;
+          border-radius: 24px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .eco-title {
+          font-size: 19px;
+          font-weight: 600;
+          color: #a79c91;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          text-align: center;
+        }
+
+        .ecosystem-pill-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          justify-content: center;
+        }
+
+        .eco-chip {
+          padding: 12px 22px;
+          background: #241e19;
+          border: 1px solid #3a3129;
+          border-radius: 100px;
+          font-size: 20px;
+          font-weight: 500;
+          color: #f7f2eb;
+        }
+
+        .eco-chip.highlight {
+          border-color: #10b981;
+          color: #10b981;
+          background: rgba(16, 185, 129, 0.12);
+        }
+
+        .eco-chip.accent {
+          border-color: #ff6b35;
+          color: #ff6b35;
+          background: rgba(255, 107, 53, 0.12);
+        }
+
+        /* Bottom-Anchored Statement */
+        .scene-bottom-statement {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .statement-headline {
+          font-size: 64px;
+          font-weight: 700;
+          line-height: 1.12;
+          letter-spacing: -0.02em;
+          color: #f7f2eb;
+        }
+
+        .statement-subhead {
+          font-size: 26px;
+          font-weight: 400;
+          line-height: 1.45;
+          color: #a79c91;
+        }
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="scene4"
+        data-width="1080"
+        data-height="1920"
+        data-duration="12.42"
+      >
+        <div class="payoff-top-container">
+          <div id="s4-card" class="benchmark-card">
+            <div class="card-header">
+              <div class="card-header-left">
+                <div class="card-dot"></div>
+                <div class="card-dot"></div>
+                <div class="card-dot"></div>
+                <span class="card-title">Authoritative Verified Benchmarks</span>
+              </div>
+              <span class="card-badge">SONNET PARITY</span>
+            </div>
+
+            <div class="bench-item">
+              <div class="bench-labels">
+                <span>SWE-bench Verified (Real Repo Issues)</span>
+                <span style="color: #ff6b35;">68.1% (GLM-4.6)</span>
+              </div>
+              <div class="bench-track">
+                <div id="s4-bar-swe" class="bench-fill"></div>
+              </div>
+            </div>
+
+            <div class="bench-item">
+              <div class="bench-labels">
+                <span>AIME 2025 (Advanced Reasoning)</span>
+                <span style="color: #10b981;">92.5%</span>
+              </div>
+              <div class="bench-track">
+                <div id="s4-bar-aime" class="bench-fill green"></div>
+              </div>
+            </div>
+
+            <div class="bench-item">
+              <div class="bench-labels">
+                <span>CC-Bench (Claude Code Win Rate)</span>
+                <span style="color: #a78bfa;">48.6% vs Sonnet 4</span>
+              </div>
+              <div class="bench-track">
+                <div id="s4-bar-cc" class="bench-fill sonnet"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ecosystem-container" id="s4-eco">
+            <div class="eco-title">Ecosystem & Tool Support</div>
+            <div class="ecosystem-pill-row">
+              <div class="eco-chip highlight">🔓 MIT License</div>
+              <div class="eco-chip accent">Claude Code</div>
+              <div class="eco-chip accent">Cline</div>
+              <div class="eco-chip">Roo Code</div>
+              <div class="eco-chip">Hugging Face</div>
+              <div class="eco-chip">Z.ai API</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene-bottom-statement" id="s4-statement">
+          <h2 class="statement-headline">Frontier Coding in Your IDE</h2>
+          <p class="statement-subhead">
+            Deploy unrestricted open-weight intelligence directly into your daily toolchain.
+          </p>
+        </div>
+      </div>
+
+      <script>
+        /*
+         * Scene 4 Speech Timing (Scene-local 0.00s – 12.42s):
+         * 0.49 - 6.35: "Scoring 68.1% on SWE-bench Verified and available under the MIT license,"
+         * 6.67 - 7.28: "GLM-4.6"
+         * 7.53 - 11.46: "brings unrestricted frontier coding right to your local workflow."
+         */
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.fromTo(
+          "#s4-card",
+          { y: 40, opacity: 0, scale: 0.96 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" },
+          0.2,
+        );
+
+        // Animate Benchmark bars
+        tl.to("#s4-bar-swe", { width: "68.1%", duration: 1.2, ease: "power2.out" }, 0.8);
+        tl.to("#s4-bar-aime", { width: "92.5%", duration: 1.2, ease: "power2.out" }, 1.1);
+        tl.to("#s4-bar-cc", { width: "48.6%", duration: 1.2, ease: "power2.out" }, 1.4);
+
+        tl.fromTo(
+          "#s4-eco",
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" },
+          3.0,
+        );
+
+        tl.fromTo(
+          "#s4-eco .eco-chip",
+          { scale: 0.8, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, ease: "back.out(1.6)" },
+          3.5,
+        );
+
+        tl.fromTo(
+          "#s4-statement",
+          { y: 35, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+          6.8,
+        );
+
+        window.__timelines["scene4"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

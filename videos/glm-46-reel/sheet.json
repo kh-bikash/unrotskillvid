@@ -1,0 +1,57 @@
+{
+  "title": "GLM-4.6 Release  /  Unrot Tutorial Storyboard",
+  "subtitle": "4-Scene High-Fidelity Reel with Held Hero Recording, Virtual Camera & Pause-Locked Cuts",
+  "meta": "1080x1920  ·  51.1s  ·  4 scenes  ·  Geist Sans",
+  "theme": "dark",
+  "cols": 3,
+  "tiles": [
+    {
+      "file": "frame-00-at-5s.png",
+      "index": "01",
+      "name": "Hook: 355B MoE",
+      "time": "0.0 – 10.6s",
+      "note": "Top-anchored headline; stat banner & architecture stack enter with staggered ease",
+      "vo": "Meet GLM-4.6 from Zhipu AI, the 355-billion-parameter open-weight model engineered specifically for agentic AI and software engineering."
+    },
+    {
+      "file": "frame-01-at-14.5s.png",
+      "index": "02",
+      "name": "Hero: Code Zoom",
+      "time": "10.6 – 18.0s",
+      "note": "Virtual camera drifts into code editor; 200k context caption swaps below",
+      "vo": "With an expanded 200,000-token context window and native tool calling, it achieves direct parity with Claude Sonnet 4 inside environments like Claude Code and Cline."
+    },
+    {
+      "file": "frame-02-at-22s.png",
+      "index": "03",
+      "name": "Hero: Terminal Pan",
+      "time": "18.0 – 28.8s",
+      "note": "Camera tracks across to terminal tool execution; tests pass at 100%",
+      "vo": "It navigates entire repositories, plans complex multi-file refactors, and executes terminal commands with precision."
+    },
+    {
+      "file": "frame-03-at-33.5s.png",
+      "index": "04",
+      "name": "Nuance: Top-2 Router",
+      "time": "28.8 – 38.6s",
+      "note": "MoE network pulses active 32B expert nodes; 30% token reduction metrics pop",
+      "vo": "Its Mixture-of-Experts architecture activates only 32 billion parameters per token, delivering frontier-grade reasoning with over thirty percent lower token consumption."
+    },
+    {
+      "file": "frame-04-at-44s.png",
+      "index": "05",
+      "name": "Payoff: SWE-bench Parity",
+      "time": "38.6 – 49.5s",
+      "note": "Verified benchmark parity bars animate; ecosystem chips & MIT badge pop in",
+      "vo": "Scoring 68.1% on SWE-bench Verified and available under the MIT license, GLM-4.6 brings unrestricted frontier coding right to your local workflow."
+    },
+    {
+      "file": "frame-05-at-49.538s.png",
+      "index": "06",
+      "name": "Closing Verdict",
+      "time": "49.5 – 51.1s",
+      "note": "Frontier Coding in Your IDE statement locked; smooth dark fade out",
+      "vo": "Deploy unrestricted open-weight intelligence directly into your daily toolchain."
+    }
+  ]
+}

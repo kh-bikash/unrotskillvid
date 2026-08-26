@@ -1,0 +1,355 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 400;
+          font-display: block;
+          src: url(assets/fonts/geist-400.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 600;
+          font-display: block;
+          src: url(assets/fonts/geist-600.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 700;
+          font-display: block;
+          src: url(assets/fonts/geist-700.woff2) format("woff2");
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #13100e;
+          color: #f7f2eb;
+          font-family: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+          padding: 100px 56px 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          box-sizing: border-box;
+        }
+
+        .moe-top-container {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .moe-card {
+          width: 100%;
+          background: #1b1511;
+          border: 1px solid #3a3129;
+          border-radius: 32px;
+          padding: 36px;
+          box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+        }
+
+        .moe-card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 16px;
+          border-bottom: 1px solid #29221c;
+        }
+
+        .moe-title {
+          font-size: 22px;
+          font-weight: 600;
+          color: #a79c91;
+          letter-spacing: 0.04em;
+        }
+
+        .moe-routing-tag {
+          font-size: 18px;
+          font-weight: 600;
+          color: #ff6b35;
+          background: rgba(255, 107, 53, 0.12);
+          border: 1px solid rgba(255, 107, 53, 0.3);
+          padding: 4px 14px;
+          border-radius: 100px;
+        }
+
+        .router-visual-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 20px;
+          background: #241e19;
+          border: 1px solid #362e26;
+          border-radius: 16px;
+        }
+
+        .router-token {
+          font-size: 20px;
+          font-weight: 600;
+          color: #38bdf8;
+        }
+
+        .router-arrow {
+          font-size: 22px;
+          color: #ff6b35;
+        }
+
+        .router-select {
+          font-size: 20px;
+          font-weight: 600;
+          color: #10b981;
+        }
+
+        .moe-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 14px;
+        }
+
+        .expert-node {
+          background: #241e19;
+          border: 1px solid #362e26;
+          border-radius: 18px;
+          padding: 22px 10px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          box-sizing: border-box;
+        }
+
+        .expert-node.active {
+          background: rgba(255, 107, 53, 0.15);
+          border-color: #ff6b35;
+        }
+
+        .expert-indicator {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #473a30;
+        }
+
+        .expert-node.active .expert-indicator {
+          background: #ff6b35;
+          box-shadow: 0 0 14px #ff6b35;
+        }
+
+        .expert-name {
+          font-size: 19px;
+          font-weight: 600;
+          color: #f7f2eb;
+        }
+
+        .expert-role {
+          font-size: 15px;
+          color: #a79c91;
+        }
+
+        /* 2-Column Metrics */
+        .moe-metrics-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+
+        .metric-tile {
+          background: #1b1511;
+          border: 1px solid #3a3129;
+          border-radius: 24px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          box-sizing: border-box;
+        }
+
+        .metric-val {
+          font-size: 46px;
+          font-weight: 700;
+          color: #ff6b35;
+        }
+
+        .metric-val.green {
+          color: #10b981;
+        }
+
+        .metric-desc {
+          font-size: 20px;
+          font-weight: 500;
+          color: #a79c91;
+          line-height: 1.35;
+        }
+
+        /* Bottom-Anchored Statement */
+        .scene-bottom-statement {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .statement-headline {
+          font-size: 64px;
+          font-weight: 700;
+          line-height: 1.12;
+          letter-spacing: -0.02em;
+          color: #f7f2eb;
+        }
+
+        .statement-subhead {
+          font-size: 26px;
+          font-weight: 400;
+          line-height: 1.45;
+          color: #a79c91;
+        }
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="scene3"
+        data-width="1080"
+        data-height="1920"
+        data-duration="9.81"
+      >
+        <div class="moe-top-container">
+          <div id="s3-card" class="moe-card">
+            <div class="moe-card-header">
+              <span class="moe-title">Sparse Mixture-of-Experts</span>
+              <span class="moe-routing-tag">TOP-2 ROUTING</span>
+            </div>
+
+            <div class="router-visual-bar" id="s3-router-bar">
+              <span class="router-token">Input Token Embeddings</span>
+              <span class="router-arrow">➔</span>
+              <span class="router-select">Top-2 Active Experts (32B)</span>
+            </div>
+
+            <div class="moe-grid">
+              <div class="expert-node" id="exp-1">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-1</span>
+                <span class="expert-role">Logic</span>
+              </div>
+              <div class="expert-node active" id="exp-2">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-2</span>
+                <span class="expert-role">Code</span>
+              </div>
+              <div class="expert-node" id="exp-3">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-3</span>
+                <span class="expert-role">Math</span>
+              </div>
+              <div class="expert-node" id="exp-4">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-4</span>
+                <span class="expert-role">Memory</span>
+              </div>
+              <div class="expert-node active" id="exp-5">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-5</span>
+                <span class="expert-role">Tools</span>
+              </div>
+              <div class="expert-node" id="exp-6">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-6</span>
+                <span class="expert-role">KV Cache</span>
+              </div>
+              <div class="expert-node active" id="exp-7">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-7</span>
+                <span class="expert-role">Refactor</span>
+              </div>
+              <div class="expert-node" id="exp-8">
+                <div class="expert-indicator"></div>
+                <span class="expert-name">E-8</span>
+                <span class="expert-role">Verifier</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="moe-metrics-row" id="s3-metrics">
+            <div class="metric-tile">
+              <span class="metric-val">32B</span>
+              <span class="metric-desc">Active parameters per forward pass (355B total)</span>
+            </div>
+            <div class="metric-tile">
+              <span class="metric-val green">>30%</span>
+              <span class="metric-desc">Lower token consumption vs GLM-4.5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene-bottom-statement" id="s3-statement">
+          <h2 class="statement-headline">355B Mixture-of-Experts</h2>
+          <p class="statement-subhead">
+            Dynamic routing activates only the specialized parameters needed per token.
+          </p>
+        </div>
+      </div>
+
+      <script>
+        /*
+         * Scene 3 Speech Timing (Scene-local 0.00s – 9.81s):
+         * 0.49 - 5.14: "Its Mixture-of-Experts architecture activates only 32 billion parameters per token,"
+         * 5.42 - 9.31: "delivering frontier-grade reasoning with over thirty percent lower token consumption."
+         */
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.fromTo(
+          "#s3-card",
+          { y: 40, opacity: 0, scale: 0.96 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" },
+          0.2,
+        );
+
+        tl.fromTo(
+          "#s3-router-bar",
+          { opacity: 0, scaleX: 0.9 },
+          { opacity: 1, scaleX: 1, duration: 0.5, ease: "power2.out" },
+          0.7,
+        );
+
+        // Pulse active expert nodes
+        tl.fromTo(
+          "#exp-2, #exp-5, #exp-7",
+          { scale: 0.94 },
+          { scale: 1.06, duration: 0.45, stagger: 0.15, yoyo: true, repeat: 7, ease: "sine.inOut" },
+          1.2,
+        );
+
+        tl.fromTo(
+          "#s3-metrics .metric-tile",
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, stagger: 0.15, ease: "power3.out" },
+          4.8,
+        );
+
+        tl.fromTo(
+          "#s3-statement",
+          { y: 35, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+          0.5,
+        );
+
+        window.__timelines["scene3"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

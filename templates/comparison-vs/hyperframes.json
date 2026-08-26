@@ -1,0 +1,14 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/v1.json",
+  "name": "comparison-vs",
+  "version": "1.0.0",
+  "main": "index.html",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "duration": 44.0,
+  "metadata": {
+    "type": "comparison-vs",
+    "theme": "dark"
+  }
+}

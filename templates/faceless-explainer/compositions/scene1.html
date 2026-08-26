@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 1: Faceless Hook</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f8fafc;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 220px 72px 100px 72px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 24px;
+        background: rgba(14, 165, 233, 0.15);
+        border: 1px solid rgba(14, 165, 233, 0.4);
+        border-radius: 9999px;
+        color: #38bdf8;
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 48px;
+      }
+
+      .main-hook {
+        font-size: 92px;
+        line-height: 1.05;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 40px;
+      }
+
+      .accent-word {
+        color: #38bdf8;
+        display: inline-block;
+      }
+
+      .hook-card {
+        margin-top: 60px;
+        width: 100%;
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 36px;
+        padding: 48px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+      }
+
+      .hook-icon {
+        font-size: 80px;
+        margin-bottom: 24px;
+      }
+
+      .hook-fact {
+        font-size: 34px;
+        font-weight: 600;
+        color: #e2e8f0;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene1" class="clip" data-start="0" data-duration="8.00">
+      <div class="scene-wrap">
+        <div id="tag-1" class="tag">
+          <span>🧠 MENTAL MODEL OF THE DAY</span>
+        </div>
+
+        <h1 id="hook-title" class="main-hook">
+          Why 99% of people get <span class="accent-word">productivity</span> completely backwards.
+        </h1>
+
+        <div id="card-1" class="hook-card">
+          <div class="hook-icon">⏱️</div>
+          <p class="hook-fact">It is not about managing your time — it is about managing your cognitive energy.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#tag-1", { opacity: 0, y: -20, duration: 0.6, ease: "power2.out" }, 0.2)
+        .from("#hook-title", { opacity: 0, scale: 0.9, duration: 0.8, ease: "power2.out" }, 0.4)
+        .from(".accent-word", { scale: 1.2, color: "#ffffff", duration: 0.6, ease: "back.out(2.0)" }, 0.9)
+        .from("#card-1", { opacity: 0, y: 40, duration: 0.8, ease: "back.out(1.3)" }, 1.2);
+
+      window.__timelines["scene1"] = tl;
+    </script>
+  </body>
+</html>

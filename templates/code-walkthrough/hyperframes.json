@@ -1,0 +1,14 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/v1.json",
+  "name": "code-walkthrough",
+  "version": "1.0.0",
+  "main": "index.html",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "duration": 48.0,
+  "metadata": {
+    "type": "code-walkthrough",
+    "theme": "dark"
+  }
+}

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 2: Feature Matrix</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f5f5f5;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 120px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .matrix-table {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .matrix-row {
+        background: #1c1c1c;
+        border: 1px solid #333333;
+        border-radius: 24px;
+        padding: 32px 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .feat-name {
+        font-size: 28px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .feat-scores {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+      }
+
+      .score-tag-a {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.15);
+        padding: 8px 18px;
+        border-radius: 12px;
+      }
+
+      .score-tag-b {
+        font-size: 24px;
+        font-weight: 700;
+        color: #3b82f6;
+        background: rgba(59, 130, 246, 0.15);
+        padding: 8px 18px;
+        border-radius: 12px;
+      }
+
+      .bottom-cap {
+        padding: 28px;
+        background: rgba(28, 28, 28, 0.9);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        text-align: center;
+      }
+
+      .cap-txt {
+        font-size: 32px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .cap-txt span {
+        color: #3b82f6;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene2" class="clip" data-start="8.00" data-duration="14.00">
+      <div class="scene-wrap">
+        <div class="matrix-table">
+          <div id="row-1" class="matrix-row">
+            <span class="feat-name">Context Window</span>
+            <div class="feat-scores">
+              <span class="score-tag-a">128K</span>
+              <span class="score-tag-b">200K ✔</span>
+            </div>
+          </div>
+
+          <div id="row-2" class="matrix-row">
+            <span class="feat-name">Tool Calling Accuracy</span>
+            <div class="feat-scores">
+              <span class="score-tag-a">82.4%</span>
+              <span class="score-tag-b">94.1% ✔</span>
+            </div>
+          </div>
+
+          <div id="row-3" class="matrix-row">
+            <span class="feat-name">Inference Latency</span>
+            <div class="feat-scores">
+              <span class="score-tag-a">1.8s</span>
+              <span class="score-tag-b">0.6s ✔</span>
+            </div>
+          </div>
+
+          <div id="row-4" class="matrix-row">
+            <span class="feat-name">License & Weights</span>
+            <div class="feat-scores">
+              <span class="score-tag-a">Closed</span>
+              <span class="score-tag-b">Open MIT ✔</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="bottom-bar" class="bottom-cap">
+          <p class="cap-txt">Option B delivers <span>3x faster execution</span> with zero vendor lock-in.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from(".matrix-row", { opacity: 0, y: 20, stagger: 0.25, duration: 0.6, ease: "power2.out" }, 0.2)
+        .from("#bottom-bar", { opacity: 0, y: 30, duration: 0.6, ease: "back.out(1.2)" }, 1.5);
+
+      window.__timelines["scene2"] = tl;
+    </script>
+  </body>
+</html>

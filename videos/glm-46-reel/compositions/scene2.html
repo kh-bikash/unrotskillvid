@@ -1,0 +1,293 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 400;
+          font-display: block;
+          src: url(assets/fonts/geist-400.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 600;
+          font-display: block;
+          src: url(assets/fonts/geist-600.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 700;
+          font-display: block;
+          src: url(assets/fonts/geist-700.woff2) format("woff2");
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #13100e;
+          color: #f7f2eb;
+          font-family: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+          padding: 80px 48px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          box-sizing: border-box;
+        }
+
+        .hero-top-bar {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 14px 28px;
+          background: #1b1511;
+          border: 1px solid #3a3129;
+          border-radius: 100px;
+          box-sizing: border-box;
+        }
+
+        .hero-top-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .hero-live-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #ff6b35;
+          box-shadow: 0 0 14px #ff6b35;
+        }
+
+        .hero-title-tag {
+          font-size: 20px;
+          font-weight: 600;
+          color: #f7f2eb;
+          letter-spacing: 0.02em;
+        }
+
+        .hero-runtime-tag {
+          font-size: 18px;
+          font-weight: 600;
+          color: #38bdf8;
+          background: rgba(56, 189, 248, 0.12);
+          border: 1px solid rgba(56, 189, 248, 0.25);
+          padding: 4px 14px;
+          border-radius: 100px;
+        }
+
+        #band {
+          position: relative;
+          width: 1080px;
+          height: 1020px;
+          overflow: hidden;
+          background: #0a0c10;
+          border-top: 1px solid #2e2620;
+          border-bottom: 1px solid #2e2620;
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.85);
+        }
+
+        #world {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1020px;
+          transform-origin: 50% 50%;
+        }
+
+        #hero-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .caption-card-container {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .hero-caption-box {
+          width: 100%;
+          background: #1b1511;
+          border: 1px solid #3a3129;
+          border-radius: 24px;
+          padding: 28px 36px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+          box-sizing: border-box;
+        }
+
+        .caption-sub {
+          font-size: 20px;
+          font-weight: 600;
+          color: #ff6b35;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .hero-caption {
+          font-size: 34px;
+          font-weight: 700;
+          line-height: 1.35;
+          color: #f7f2eb;
+        }
+
+        .hero-caption .accent-word {
+          color: #ff6b35;
+        }
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="scene2"
+        data-width="1080"
+        data-height="1920"
+        data-duration="18.23"
+      >
+        <div class="hero-top-bar">
+          <div class="hero-top-left">
+            <div class="hero-live-dot"></div>
+            <span class="hero-title-tag">GLM-4.6 SWE-BENCH REFACTORING</span>
+          </div>
+          <span class="hero-runtime-tag">CLAUDE CODE</span>
+        </div>
+
+        <div id="band">
+          <div id="world" data-layout-allow-overflow>
+            <video
+              id="hero-video"
+              class="clip"
+              src="assets/demo.mp4"
+              data-start="0"
+              data-duration="18.23"
+              data-track-index="1"
+              muted
+              playsinline
+            ></video>
+          </div>
+        </div>
+
+        <div class="caption-card-container">
+          <div id="s2-box" class="hero-caption-box">
+            <div id="s2-sub" class="caption-sub">MASSIVE REPO CONTEXT</div>
+            <div id="s2-caption" class="hero-caption">
+              Expanded <span class="accent-word">200,000 token</span> context window
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        /*
+         * Scene 2 Speech Timing (Scene-local time 0.00s – 18.23s):
+         * 0.52 - 4.59: "With an expanded 200,000-token context window and native tool calling,"
+         * 4.93 - 9.78: "it achieves direct parity with Claude Sonnet 4 inside environments like Claude Code and Cline."
+         * 10.76 - 12.79: "It navigates entire repositories,"
+         * 13.08 - 15.26: "plans complex multi-file refactors,"
+         * 15.54 - 17.73: "and executes terminal commands with precision."
+         */
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Camera movements: Band is 1080x1020.
+        // At s = 1.30: max |x| <= 162, max |y| <= 153.
+        const worldEl = document.getElementById("world");
+        const cam = { s: 1, x: 0, y: 0 };
+        const applyCam = () => {
+          if (worldEl) {
+            worldEl.style.transform = `translate(${cam.x}px, ${cam.y}px) scale(${cam.s})`;
+          }
+        };
+        applyCam();
+
+        // Leg 1: Initial wide view
+        tl.fromTo(
+          cam,
+          { s: 1, x: 0, y: 0 },
+          { s: 1, x: 0, y: 0, duration: 1.5, onUpdate: applyCam, immediateRender: false },
+          0,
+        );
+
+        // Leg 2: Drift to Code Editor (kv_cache_sparse.py)
+        tl.fromTo(
+          cam,
+          { s: 1, x: 0, y: 0 },
+          { s: 1.3, x: 120, y: -40, duration: 3.5, ease: "power2.inOut", onUpdate: applyCam, immediateRender: false },
+          1.8,
+        );
+
+        // Leg 3: Travel across to Agent Terminal (tool execution & pytest)
+        tl.fromTo(
+          cam,
+          { s: 1.3, x: 120, y: -40 },
+          { s: 1.3, x: -120, y: 40, duration: 3.8, ease: "power2.inOut", onUpdate: applyCam, immediateRender: false },
+          7.5,
+        );
+
+        // Leg 4: Pull back to wide
+        tl.fromTo(
+          cam,
+          { s: 1.3, x: -120, y: 40 },
+          { s: 1, x: 0, y: 0, duration: 2.8, ease: "power2.inOut", onUpdate: applyCam, immediateRender: false },
+          13.5,
+        );
+
+        // Synchronized Caption Transitions on speech pauses
+        const s2Sub = document.getElementById("s2-sub");
+        const s2Caption = document.getElementById("s2-caption");
+
+        // Caption 1: 0.0s - 4.75s
+        tl.call(() => {
+          if (s2Sub) s2Sub.innerText = "MASSIVE REPO CONTEXT";
+          if (s2Caption) s2Caption.innerHTML = 'Expanded <span class="accent-word">200,000 token</span> window & native tool use';
+        }, null, 0);
+
+        // Caption 2: 4.75s - 10.25s (pause at ~4.75s)
+        tl.to([s2Sub, s2Caption], { opacity: 0, y: -8, duration: 0.2 }, 4.55);
+        tl.call(() => {
+          if (s2Sub) s2Sub.innerText = "BENCHMARK WINNER";
+          if (s2Caption) s2Caption.innerHTML = 'Direct parity with <span class="accent-word">Claude Sonnet 4</span> in Claude Code & Cline';
+        }, null, 4.75);
+        tl.to([s2Sub, s2Caption], { opacity: 1, y: 0, duration: 0.25 }, 4.8);
+
+        // Caption 3: 10.25s - 14.5s (pause at ~10.25s)
+        tl.to([s2Sub, s2Caption], { opacity: 0, y: -8, duration: 0.2 }, 10.05);
+        tl.call(() => {
+          if (s2Sub) s2Sub.innerText = "MULTI-FILE EDITING";
+          if (s2Caption) s2Caption.innerHTML = 'Navigates full codebases & plans <span class="accent-word">multi-file refactors</span>';
+        }, null, 10.25);
+        tl.to([s2Sub, s2Caption], { opacity: 1, y: 0, duration: 0.25 }, 10.3);
+
+        // Caption 4: 14.5s - 18.23s (pause at ~14.5s)
+        tl.to([s2Sub, s2Caption], { opacity: 0, y: -8, duration: 0.2 }, 14.3);
+        tl.call(() => {
+          if (s2Sub) s2Sub.innerText = "AUTONOMOUS EXECUTION";
+          if (s2Caption) s2Caption.innerHTML = 'Executes real <span class="accent-word">terminal commands</span> with precision';
+        }, null, 14.5);
+        tl.to([s2Sub, s2Caption], { opacity: 1, y: 0, duration: 0.25 }, 14.55);
+
+        window.__timelines["scene2"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

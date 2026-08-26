@@ -1,0 +1,44 @@
+{
+  "name": "unrotskillvid",
+  "version": "1.0.0",
+  "description": "Next-generation AI video creation skill and CLI to build high-retention 9:16 vertical reels and explainer videos with human audio (Gemini TTS) and 5 video styles.",
+  "main": "bin/cli.js",
+  "type": "module",
+  "bin": {
+    "unrotskillvid": "./bin/cli.js",
+    "skillvid": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node bin/cli.js",
+    "create": "node bin/cli.js create",
+    "list-types": "node bin/cli.js list-types",
+    "list-voices": "node bin/cli.js list-voices",
+    "test-audio": "python scripts/tts.py \"Testing unrotskillvid human voice synthesis.\" --out scratch/test.wav",
+    "test-map": "python scripts/audio-map.py scratch/test.wav --scenes 4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kh-bikash/unrotskillvid.git"
+  },
+  "keywords": [
+    "npx",
+    "skill",
+    "video-generator",
+    "reels",
+    "explainer-video",
+    "tts",
+    "gemini-tts",
+    "elevenlabs",
+    "hyperframes",
+    "ai-video",
+    "claude-skill",
+    "codex-skill",
+    "antigravity-skill"
+  ],
+  "author": "kh-bikash",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kh-bikash/unrotskillvid/issues"
+  },
+  "homepage": "https://github.com/kh-bikash/unrotskillvid#readme"
+}

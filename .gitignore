@@ -1,0 +1,31 @@
+# Node dependencies & caches
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# Temp scratch files & local test renders
+scratch/
+out/
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# OS / Editor
+.vscode/
+.idea/
+*.swp
+*.swo

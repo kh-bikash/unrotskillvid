@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scene 3: The Framework</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 400;
+        src: url(../assets/fonts/geist-400.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 600;
+        src: url(../assets/fonts/geist-600.woff2) format("woff2");
+      }
+      @font-face {
+        font-family: "Geist";
+        font-style: normal;
+        font-weight: 700;
+        src: url(../assets/fonts/geist-700.woff2) format("woff2");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 1080px;
+        height: 1920px;
+        background: transparent;
+        color: #f8fafc;
+        font-family: "Geist", sans-serif;
+        overflow: hidden;
+      }
+
+      .scene-wrap {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        padding: 160px 72px 140px 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .framework-box {
+        background: #1e293b;
+        border: 2px solid #38bdf8;
+        border-radius: 36px;
+        padding: 48px;
+        box-shadow: 0 30px 60px rgba(14, 165, 233, 0.2);
+        margin-top: 40px;
+      }
+
+      .f-header {
+        font-size: 24px;
+        color: #38bdf8;
+        font-weight: 700;
+        margin-bottom: 24px;
+      }
+
+      .rule-row {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 0;
+        border-bottom: 1px solid #334155;
+      }
+
+      .rule-row:last-child {
+        border-bottom: none;
+      }
+
+      .rule-badge {
+        background: #0f172a;
+        padding: 8px 18px;
+        border-radius: 12px;
+        color: #38bdf8;
+        font-weight: 700;
+        font-size: 22px;
+      }
+
+      .rule-text {
+        font-size: 28px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .bottom-part {
+        margin-top: auto;
+      }
+
+      .bot-head {
+        font-size: 72px;
+        font-weight: 700;
+        line-height: 1.1;
+        color: #ffffff;
+        margin-bottom: 18px;
+      }
+
+      .bot-sub {
+        font-size: 30px;
+        color: #94a3b8;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scene3" class="clip" data-start="20.00" data-duration="12.00">
+      <div class="scene-wrap">
+        <div id="frame-card" class="framework-box">
+          <div class="f-header">THE 80/20 LEVERAGE PROTOCOL</div>
+          <div class="rule-row">
+            <span class="rule-badge">STEP 1</span>
+            <span class="rule-text">Identify your top 1 High-ROI needle-mover</span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-badge">STEP 2</span>
+            <span class="rule-text">Protect 90 minutes of zero-distraction deep work</span>
+          </div>
+          <div class="rule-row">
+            <span class="rule-badge">STEP 3</span>
+            <span class="rule-text">Automate or delegate the rest ruthlessly</span>
+          </div>
+        </div>
+
+        <div class="bottom-part">
+          <h2 id="b-title" class="bot-head">Protect your peak energy windows.</h2>
+          <p id="b-sub" class="bot-sub">One hour of peak flow outperforms four hours of distracted effort every single time.</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      tl.from("#frame-card", { opacity: 0, scale: 0.92, y: 30, duration: 0.8, ease: "back.out(1.3)" }, 0.2)
+        .from(".rule-row", { opacity: 0, x: -20, stagger: 0.3, duration: 0.6, ease: "power2.out" }, 0.6)
+        .from("#b-title", { opacity: 0, y: 30, duration: 0.7, ease: "power2.out" }, 1.3)
+        .from("#b-sub", { opacity: 0, y: 20, duration: 0.6, ease: "power2.out" }, 1.6);
+
+      window.__timelines["scene3"] = tl;
+    </script>
+  </body>
+</html>

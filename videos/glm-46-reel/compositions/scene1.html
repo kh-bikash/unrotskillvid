@@ -1,0 +1,422 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 400;
+          font-display: block;
+          src: url(assets/fonts/geist-400.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 600;
+          font-display: block;
+          src: url(assets/fonts/geist-600.woff2) format("woff2");
+        }
+        @font-face {
+          font-family: "Geist";
+          font-style: normal;
+          font-weight: 700;
+          font-display: block;
+          src: url(assets/fonts/geist-700.woff2) format("woff2");
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: #13100e;
+          color: #f7f2eb;
+          font-family: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+          padding: 100px 56px 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          box-sizing: border-box;
+        }
+
+        .hook-top {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .brand-badge-row {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .brand-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 10px 22px;
+          background: #211b16;
+          border: 1px solid #3a3129;
+          border-radius: 100px;
+        }
+
+        .brand-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          background: #ff6b35;
+          box-shadow: 0 0 14px #ff6b35;
+        }
+
+        .brand-pill-text {
+          font-size: 20px;
+          font-weight: 600;
+          color: #ff6b35;
+          letter-spacing: 0.04em;
+        }
+
+        .org-pill {
+          font-size: 20px;
+          font-weight: 600;
+          color: #a79c91;
+          background: #1b1511;
+          border: 1px solid #2e2620;
+          padding: 10px 20px;
+          border-radius: 100px;
+        }
+
+        .hook-title {
+          font-size: 88px;
+          font-weight: 700;
+          line-height: 1.05;
+          letter-spacing: -0.03em;
+          color: #f7f2eb;
+        }
+
+        .hook-title .highlight {
+          color: #ff6b35;
+        }
+
+        .hook-subtitle {
+          font-size: 30px;
+          font-weight: 400;
+          line-height: 1.4;
+          color: #a79c91;
+        }
+
+        /* Stat highlights grid */
+        .stat-banner {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+          margin-top: 6px;
+        }
+
+        .stat-box {
+          background: #1a1512;
+          border: 1px solid #312821;
+          border-radius: 20px;
+          padding: 20px 18px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+
+        .stat-val {
+          font-size: 38px;
+          font-weight: 700;
+          color: #ff6b35;
+        }
+
+        .stat-lbl {
+          font-size: 18px;
+          font-weight: 500;
+          color: #a79c91;
+        }
+
+        /* Center Showcase Card */
+        .hook-card {
+          background: #1b1511;
+          border: 1px solid #3a3129;
+          border-radius: 32px;
+          padding: 36px;
+          box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+        }
+
+        .card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding-bottom: 20px;
+          border-bottom: 1px solid #29221c;
+        }
+
+        .card-header-left {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .card-dot {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #3a3129;
+        }
+
+        .card-title {
+          margin-left: 8px;
+          font-size: 22px;
+          font-weight: 600;
+          color: #f7f2eb;
+        }
+
+        .card-tag {
+          font-size: 18px;
+          font-weight: 600;
+          color: #10b981;
+          background: rgba(16, 185, 129, 0.12);
+          border: 1px solid rgba(16, 185, 129, 0.3);
+          padding: 6px 14px;
+          border-radius: 100px;
+        }
+
+        .feature-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .feature-item {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          padding: 20px 24px;
+          background: #241e19;
+          border: 1px solid #362e26;
+          border-radius: 20px;
+        }
+
+        .feature-icon-box {
+          width: 54px;
+          height: 54px;
+          border-radius: 16px;
+          background: rgba(255, 107, 53, 0.14);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 26px;
+          color: #ff6b35;
+          flex-shrink: 0;
+        }
+
+        .feature-texts {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .feature-headline {
+          font-size: 25px;
+          font-weight: 600;
+          color: #f7f2eb;
+        }
+
+        .feature-desc {
+          font-size: 20px;
+          color: #a79c91;
+        }
+
+        /* Bottom trust strip */
+        .trust-strip {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 20px 28px;
+          background: #171310;
+          border: 1px solid #2e2620;
+          border-radius: 20px;
+        }
+
+        .trust-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 20px;
+          font-weight: 500;
+          color: #a79c91;
+        }
+
+        .trust-item strong {
+          color: #f7f2eb;
+        }
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="scene1"
+        data-width="1080"
+        data-height="1920"
+        data-duration="10.61"
+      >
+        <div class="hook-top">
+          <div class="brand-badge-row">
+            <div id="s1-badge" class="brand-pill">
+              <div class="brand-dot"></div>
+              <span class="brand-pill-text">FRONTIER MOE MODEL</span>
+            </div>
+            <div id="s1-org" class="org-pill">Zhipu AI (THUDM)</div>
+          </div>
+
+          <h1 id="s1-title" class="hook-title">Meet <span class="highlight">GLM-4.6</span></h1>
+          <p id="s1-subtitle" class="hook-subtitle">
+            The 355-billion-parameter open-weight model engineered for agentic software engineering.
+          </p>
+
+          <div class="stat-banner" id="s1-stats">
+            <div class="stat-box">
+              <span class="stat-val">355B</span>
+              <span class="stat-lbl">MoE Architecture</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val">200K</span>
+              <span class="stat-lbl">Context Window</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-val">68.1%</span>
+              <span class="stat-lbl">SWE-bench Verified</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="s1-card" class="hook-card">
+          <div class="card-header">
+            <div class="card-header-left">
+              <div class="card-dot"></div>
+              <div class="card-dot"></div>
+              <div class="card-dot"></div>
+              <span class="card-title">Agentic Architecture Stack</span>
+            </div>
+            <span class="card-tag">MIT LICENSE</span>
+          </div>
+
+          <div class="feature-list">
+            <div class="feature-item" id="s1-f1">
+              <div class="feature-icon-box">⚡</div>
+              <div class="feature-texts">
+                <div class="feature-headline">200,000 Token Active Context</div>
+                <div class="feature-desc">Ingests complete multi-module repositories in one turn</div>
+              </div>
+            </div>
+
+            <div class="feature-item" id="s1-f2">
+              <div class="feature-icon-box">🛠️</div>
+              <div class="feature-texts">
+                <div class="feature-headline">Native Agent Tool Calling</div>
+                <div class="feature-desc">Seamless tool execution in Claude Code, Cline & Roo</div>
+              </div>
+            </div>
+
+            <div class="feature-item" id="s1-f3">
+              <div class="feature-icon-box">🎯</div>
+              <div class="feature-texts">
+                <div class="feature-headline">Claude Sonnet 4 Coding Parity</div>
+                <div class="feature-desc">48.6% CC-Bench win rate with 32B active parameters</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trust-strip" id="s1-trust">
+          <div class="trust-item">🔓 <strong>MIT License</strong> Open Weight</div>
+          <div class="trust-item">🖥️ <strong>Local & Cloud</strong> Self-Host</div>
+        </div>
+      </div>
+
+      <script>
+        /*
+         * Scene 1 Speech Timing (0.00s – 10.61s):
+         * 0.20 - 1.15: "Meet GLM-4.6 from Zhipu AI,"
+         * 1.36 - 3.23: "the 355-billion-parameter open-weight model"
+         * 3.56 - 10.10: "engineered specifically for agentic AI and software engineering."
+         */
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        tl.fromTo(
+          "#s1-badge, #s1-org",
+          { y: -25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" },
+          0.2,
+        );
+
+        tl.fromTo(
+          "#s1-title",
+          { y: 35, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+          0.5,
+        );
+
+        tl.fromTo(
+          "#s1-subtitle",
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+          1.4,
+        );
+
+        tl.fromTo(
+          "#s1-stats .stat-box",
+          { y: 20, opacity: 0, scale: 0.95 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.6, stagger: 0.12, ease: "back.out(1.5)" },
+          2.2,
+        );
+
+        tl.fromTo(
+          "#s1-card",
+          { y: 50, opacity: 0, scale: 0.96 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" },
+          3.6,
+        );
+
+        tl.fromTo(
+          "#s1-f1",
+          { x: -35, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          4.8,
+        );
+
+        tl.fromTo(
+          "#s1-f2",
+          { x: -35, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          6.5,
+        );
+
+        tl.fromTo(
+          "#s1-f3",
+          { x: -35, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
+          8.2,
+        );
+
+        tl.fromTo(
+          "#s1-trust",
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+          9.2,
+        );
+
+        window.__timelines["scene1"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

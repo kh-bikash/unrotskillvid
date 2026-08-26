@@ -1,0 +1,14 @@
+{
+  "$schema": "https://hyperframes.heygen.com/schema/v1.json",
+  "name": "faceless-explainer",
+  "version": "1.0.0",
+  "main": "index.html",
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "duration": 42.0,
+  "metadata": {
+    "type": "faceless-explainer",
+    "theme": "dark"
+  }
+}

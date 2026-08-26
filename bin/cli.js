@@ -289,42 +289,54 @@ async function createWizard() {
   await generateFromPrompt(userPrompt, scenesCount, chosenType, chosenProvider, '', '', false);
 }
 
-// -------------------------------------------------------------
-// Main CLI Router
-// -------------------------------------------------------------
 async function main() {
   const args = process.argv.slice(2);
-  const cmd = args[0] || 'create';
+  const cmd = args[0];
+
+  const reservedCommands = [
+    'help', '--help', '-h',
+    'list-types', 'list-voices',
+    'create', 'init', 'audio', 'map', 'render', 'check', 'generate', 'prompt'
+  ];
+
+  // 1-LINE EXECUTION: npx unrotskillvid "Your prompt here"
+  if (args.length > 0 && !reservedCommands.includes(cmd) && !cmd.startsWith('-')) {
+    const promptText = args.filter(a => !a.startsWith('--')).join(' ');
+    const render = !args.includes('--no-render');
+    const provIdx = args.indexOf('--provider');
+    const provider = provIdx !== -1 && args[provIdx + 1] ? args[provIdx + 1] : 'auto';
+    const voiceIdx = args.indexOf('--voice');
+    const voice = voiceIdx !== -1 && args[voiceIdx + 1] ? args[voiceIdx + 1] : '';
+    await generateFromPrompt(promptText, 0, 'auto', provider, voice, '', render);
+    return;
+  }
 
   if (cmd === '--help' || cmd === '-h' || cmd === 'help') {
     banner();
     console.log(`
-${c.bright}USAGE:${c.reset}
-  ${c.cyan}npx unrotskillvid generate "<prompt>" [--scenes <n>] [--render]${c.reset}  Dynamic prompt-to-video pipeline
-  ${c.cyan}npx unrotskillvid create${c.reset}                                          Interactive prompt-to-video wizard
-  ${c.cyan}npx unrotskillvid init <name> [--type <t>]${c.reset}                        Scaffold a new video project
-  ${c.cyan}npx unrotskillvid audio <text|file> [--provider <p>]${c.reset}                Generate natural narration audio
-  ${c.cyan}npx unrotskillvid map <audio.wav> [--scenes <n>]${c.reset}                    Map speech pauses and scene cuts
-  ${c.cyan}npx unrotskillvid render [dir] [--out <file>]${c.reset}                       Render video to 1080x1920 60fps MP4
-  ${c.cyan}npx unrotskillvid list-types${c.reset}                                      List all available video styles
-  ${c.cyan}npx unrotskillvid list-voices${c.reset}                                     List all available TTS voices
-  ${c.cyan}npx unrotskillvid check [dir]${c.reset}                                       Run lint and layout checks
+${c.bright}1-LINE USAGE:${c.reset}
+  ${c.cyan}npx unrotskillvid "<your prompt or topic>"${c.reset}
+  ${c.dim}Takes any prompt, writes the script, generates human voiceover, structures scenes, and renders a 60fps MP4.${c.reset}
 
-${c.bright}OPTIONS:${c.reset}
-  --scenes      Number of structured scenes (default: auto 2-7)
-  --type        Video template style (screen-hero, saas-launch, code-walkthrough, faceless-explainer, comparison-vs)
-  --provider    TTS provider (gemini, elevenlabs, openai, edge)
-  --voice       Voice name or Voice ID
-  --out         Output file or project directory path
-  --render      Automatically render final 60fps MP4 video
+${c.bright}EXAMPLES:${c.reset}
+  ${c.cyan}npx unrotskillvid "Make a SaaS launch reel for an AI coding assistant"${c.reset}
+  ${c.cyan}npx unrotskillvid "Explain the 80/20 rule in productivity"${c.reset}
+  ${c.cyan}npx unrotskillvid "Showcase Supabase Auth launch" --provider gemini${c.reset}
+
+${c.bright}MORE COMMANDS:${c.reset}
+  ${c.cyan}npx unrotskillvid${c.reset}                             Interactive video creator wizard
+  ${c.cyan}npx unrotskillvid list-voices${c.reset}                List all available TTS voices (Gemini, Edge, ElevenLabs, OpenAI)
+  ${c.cyan}npx unrotskillvid list-types${c.reset}                 List all visual styles (screen-hero, saas-launch, etc.)
+  ${c.cyan}npx unrotskillvid render [dir]${c.reset}                Render existing project to MP4
 `);
     return;
   }
 
   if (cmd === 'generate' || cmd === 'prompt') {
-    const promptText = args[1];
+    const promptArgs = args.slice(1).filter(a => !a.startsWith('--'));
+    const promptText = promptArgs.join(' ');
     if (!promptText) {
-      console.error(`${c.red}Error: Prompt required. Example: npx unrotskillvid generate "Make a SaaS launch reel" --render${c.reset}`);
+      console.error(`${c.red}Error: Prompt required. Example: npx unrotskillvid "Make a SaaS launch reel"${c.reset}`);
       process.exit(1);
     }
     const scenesIdx = args.indexOf('--scenes');
@@ -337,7 +349,7 @@ ${c.bright}OPTIONS:${c.reset}
     const voice = voiceIdx !== -1 && args[voiceIdx + 1] ? args[voiceIdx + 1] : '';
     const outIdx = args.indexOf('--out');
     const outDir = outIdx !== -1 && args[outIdx + 1] ? args[outIdx + 1] : '';
-    const render = args.includes('--render');
+    const render = !args.includes('--no-render');
     await generateFromPrompt(promptText, scenes, type, provider, voice, outDir, render);
     return;
   }

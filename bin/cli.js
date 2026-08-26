@@ -226,6 +226,16 @@ async function renderVideo(projectDir, outMp4 = null) {
   await runCommand('npx', renderArgs, { cwd: dir });
 }
 
+async function generateFromPrompt(promptText, type = 'auto', provider = 'auto', voice = '', outDir = '', render = false) {
+  const pythonScript = path.join(ROOT_DIR, 'scripts', 'generate-reel.py');
+  const args = [pythonScript, promptText, '--type', type, '--provider', provider];
+  if (voice) args.push('--voice', voice);
+  if (outDir) args.push('--out', outDir);
+  if (render) args.push('--render');
+
+  await runCommand('python', args);
+}
+
 // -------------------------------------------------------------
 // Command: create (Interactive Step-by-Step Wizard)
 // -------------------------------------------------------------
@@ -234,32 +244,29 @@ async function createWizard() {
   console.log(`${c.bright}Welcome to the Unrot Reel Creation Wizard!${c.reset}`);
   console.log(`${c.dim}Let's create your viral reel in a few simple steps.\n${c.reset}`);
 
-  const nameAns = await promptUser(`${c.bright}1. What is your video project name? (e.g. ai-agent-demo): ${c.reset}`);
-  const projectName = nameAns.trim() || 'my-viral-reel';
+  const promptAns = await promptUser(`${c.bright}What is your video about? (Enter a topic or prompt): ${c.reset}`);
+  const userPrompt = promptAns.trim() || 'Create a viral tech explainer about autonomous AI agents';
 
-  console.log(`\n${c.bright}2. Choose your video style:${c.reset}`);
+  console.log(`\n${c.bright}2. Choose your video style (or let AI decide):${c.reset}`);
+  console.log(`   [0] ${c.white}auto${c.reset}              - Automatically match best style to your prompt`);
   console.log(`   [1] ${c.orange}screen-hero${c.reset}       - Screen Recording / Product Demo with virtual camera`);
   console.log(`   [2] ${c.cyan}saas-launch${c.reset}       - SaaS Launch / Feature Showcase & Bento Grid`);
   console.log(`   [3] ${c.blue}code-walkthrough${c.reset}  - Developer & AI Model Demo with Code Diffs`);
   console.log(`   [4] ${c.magenta}faceless-explainer${c.reset}- Viral Storytelling Reel (No footage needed)`);
   console.log(`   [5] ${c.green}comparison-vs${c.reset}     - Head-to-Head Comparison & Verdict`);
-  const typeChoice = await promptUser(`${c.bright}Select style [1-5] (default 1): ${c.reset}`);
+  const typeChoice = await promptUser(`${c.bright}Select style [0-5] (default 0): ${c.reset}`);
   
   const typeMap = {
+    '0': 'auto',
     '1': 'screen-hero',
     '2': 'saas-launch',
     '3': 'code-walkthrough',
     '4': 'faceless-explainer',
     '5': 'comparison-vs',
   };
-  const chosenType = typeMap[typeChoice] || 'screen-hero';
+  const chosenType = typeMap[typeChoice] || 'auto';
 
-  console.log(`\n${c.bright}3. Enter your voiceover script:${c.reset}`);
-  console.log(`${c.dim}(Paste your script text or enter path to a .txt / .md file)${c.reset}`);
-  const scriptInput = await promptUser(`Script: `);
-  const scriptText = scriptInput.trim() || 'Welcome to the future of autonomous agent software engineering with unrestricted frontier intelligence.';
-
-  console.log(`\n${c.bright}4. Choose TTS Voice Provider:${c.reset}`);
+  console.log(`\n${c.bright}3. Choose TTS Voice Provider:${c.reset}`);
   console.log(`   [1] ${c.orange}Gemini TTS${c.reset}  (Google Generative AI audio - Natural human voices)`);
   console.log(`   [2] ${c.green}Edge TTS${c.reset}    (Free, zero-config neural voices - Instant high quality)`);
   console.log(`   [3] ${c.magenta}ElevenLabs${c.reset}  (Studio quality voice cloning)`);
@@ -268,37 +275,8 @@ async function createWizard() {
   const provMap = { '1': 'gemini', '2': 'edge', '3': 'elevenlabs', '4': 'openai' };
   const chosenProvider = provMap[provChoice] || 'edge';
 
-  console.log(`\n${c.bright}🚀 Setting up project '${c.cyan}${projectName}${c.reset}'...${c.reset}\n`);
-
-  // 1. Scaffold project
-  initProject(projectName, chosenType, 'videos');
-  const projectDir = path.join(process.cwd(), 'videos', projectName);
-  const audioOut = path.join(projectDir, 'assets', 'narration.wav');
-
-  // 2. Generate Audio
-  try {
-    await generateAudio(scriptText, chosenProvider, '', audioOut);
-  } catch (err) {
-    console.log(`${c.yellow}[Notice] Audio generation completed with default fallbacks.${c.reset}`);
-  }
-
-  // 3. Map Audio Timeline
-  try {
-    const mapOut = path.join(projectDir, 'assets', 'audio-map.json');
-    await mapAudioTimeline(audioOut, 4, mapOut);
-  } catch (e) {}
-
-  console.log(`
-${c.green}${c.bright}🎉 Project successfully created and ready!${c.reset}
-📁 Location: ${c.cyan}${projectDir}${c.reset}
-
-${c.bright}To preview and edit:${c.reset}
-   ${c.cyan}cd videos/${projectName}${c.reset}
-   ${c.cyan}npm run dev${c.reset}
-
-${c.bright}To render finished MP4:${c.reset}
-   ${c.cyan}npx unrotskillvid render videos/${projectName}${c.reset}
-`);
+  console.log(`\n${c.bright}🚀 Generating end-to-end video reel from your prompt...${c.reset}\n`);
+  await generateFromPrompt(userPrompt, chosenType, chosenProvider, '', '', false);
 }
 
 // -------------------------------------------------------------
@@ -312,22 +290,42 @@ async function main() {
     banner();
     console.log(`
 ${c.bright}USAGE:${c.reset}
-  ${c.cyan}npx unrotskillvid${c.reset}                          Launch interactive video creator wizard
-  ${c.cyan}npx unrotskillvid create${c.reset}                   Launch interactive video creator wizard
-  ${c.cyan}npx unrotskillvid init <name> [--type <t>]${c.reset} Scaffold a new video project
-  ${c.cyan}npx unrotskillvid audio <text|file> [--provider <p>]${c.reset} Generate natural narration audio
-  ${c.cyan}npx unrotskillvid map <audio.wav> [--scenes <n>]${c.reset} Map speech pauses and scene cuts
-  ${c.cyan}npx unrotskillvid render [dir] [--out <file>]${c.reset} Render video to 1080x1920 60fps MP4
-  ${c.cyan}npx unrotskillvid list-types${c.reset}               List all 5 available video styles
-  ${c.cyan}npx unrotskillvid list-voices${c.reset}              List all available TTS voices
-  ${c.cyan}npx unrotskillvid check [dir]${c.reset}                Run lint and layout checks
+  ${c.cyan}npx unrotskillvid generate "<prompt>" [--render]${c.reset}  Autonomous prompt-to-video pipeline
+  ${c.cyan}npx unrotskillvid create${c.reset}                            Interactive prompt-to-video wizard
+  ${c.cyan}npx unrotskillvid init <name> [--type <t>]${c.reset}          Scaffold a new video project
+  ${c.cyan}npx unrotskillvid audio <text|file> [--provider <p>]${c.reset}  Generate natural narration audio
+  ${c.cyan}npx unrotskillvid map <audio.wav> [--scenes <n>]${c.reset}      Map speech pauses and scene cuts
+  ${c.cyan}npx unrotskillvid render [dir] [--out <file>]${c.reset}         Render video to 1080x1920 60fps MP4
+  ${c.cyan}npx unrotskillvid list-types${c.reset}                        List all 5 available video styles
+  ${c.cyan}npx unrotskillvid list-voices${c.reset}                       List all available TTS voices
+  ${c.cyan}npx unrotskillvid check [dir]${c.reset}                         Run lint and layout checks
 
 ${c.bright}OPTIONS:${c.reset}
   --type        Video template style (screen-hero, saas-launch, code-walkthrough, faceless-explainer, comparison-vs)
   --provider    TTS provider (gemini, elevenlabs, openai, edge)
   --voice       Voice name or Voice ID
-  --out         Output file path
+  --out         Output file or project directory path
+  --render      Automatically render final 60fps MP4 video
 `);
+    return;
+  }
+
+  if (cmd === 'generate' || cmd === 'prompt') {
+    const promptText = args[1];
+    if (!promptText) {
+      console.error(`${c.red}Error: Prompt required. Example: npx unrotskillvid generate "Make a SaaS launch reel" --render${c.reset}`);
+      process.exit(1);
+    }
+    const typeIdx = args.indexOf('--type');
+    const type = typeIdx !== -1 && args[typeIdx + 1] ? args[typeIdx + 1] : 'auto';
+    const provIdx = args.indexOf('--provider');
+    const provider = provIdx !== -1 && args[provIdx + 1] ? args[provIdx + 1] : 'auto';
+    const voiceIdx = args.indexOf('--voice');
+    const voice = voiceIdx !== -1 && args[voiceIdx + 1] ? args[voiceIdx + 1] : '';
+    const outIdx = args.indexOf('--out');
+    const outDir = outIdx !== -1 && args[outIdx + 1] ? args[outIdx + 1] : '';
+    const render = args.includes('--render');
+    await generateFromPrompt(promptText, type, provider, voice, outDir, render);
     return;
   }
 

@@ -5,26 +5,29 @@ Welcome to **`unrotskillvid`**, the AI Video Creation Skill & CLI tool for high-
 ## Claude Code Quick Commands
 
 ```bash
-# 1. Interactive Video Wizard
+# 1. Autonomous Prompt-to-Video Generation (End-to-End)
+node bin/cli.js generate "Create a viral explainer about autonomous AI agents" --render
+
+# 2. Interactive Video Wizard
 node bin/cli.js create
 
-# 2. Scaffold a Specific Video Style
+# 3. Scaffold a Specific Video Style
 node bin/cli.js init my-video --type screen-hero
 # Available types: screen-hero, saas-launch, code-walkthrough, faceless-explainer, comparison-vs
 
-# 3. Generate Human Audio (Gemini TTS / Edge / ElevenLabs / OpenAI)
+# 4. Generate Human Audio (Gemini TTS / Edge / ElevenLabs / OpenAI)
 python scripts/tts.py "Your narration text" --provider gemini --out videos/my-video/assets/narration.wav
 
-# 4. Map Speech Cuts & Audio Pauses
+# 5. Map Speech Cuts & Audio Pauses
 python scripts/audio-map.py videos/my-video/assets/narration.wav --scenes 4 --json videos/my-video/assets/audio-map.json
 
-# 5. Start Live Hot-Reload Preview Server
+# 6. Start Live Hot-Reload Preview Server
 cd videos/my-video && npm run dev
 
-# 6. Run Full Layout & Contrast Check
+# 7. Run Full Layout & Contrast Check
 node bin/cli.js check videos/my-video
 
-# 7. Render 60fps Vertical MP4
+# 8. Render 60fps Vertical MP4
 node bin/cli.js render videos/my-video
 ```
 

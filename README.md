@@ -4,7 +4,7 @@
 
 ### **AI Video Creation Skill & CLI for High-Retention Vertical Reels & Explainers**
 
-**Turn product demos, screen recordings, SaaS launches, code diffs, or faceless AI concepts into stunning 60fps 9:16 vertical reels with human voiceovers.**
+**Turn any prompt, product demo, SaaS launch, code diff, or viral concept into a complete 60fps 9:16 vertical reel with natural human voiceovers in a single command.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org)
@@ -12,26 +12,31 @@
 [![Resolution](https://img.shields.io/badge/Resolution-1080x1920%20(9%3A16)-orange.svg)]()
 [![Frame Rate](https://img.shields.io/badge/Frame%20Rate-60fps-purple.svg)]()
 
-[Quick Start](#-quick-start) • [5 Video Styles](#-5-video-styles) • [Human Audio & Gemini TTS](#-human-audio--gemini-tts) • [Non-Tech User Guide](#-non-tech-friendly-guide) • [Claude & Codex Setup](#-claude-code--codex-agent-setup) • [CLI Reference](#-cli-command-reference)
+[1-Prompt Video Generation](#-1-prompt-video-generation) • [5 Video Styles](#-5-video-styles) • [Human Audio & Gemini TTS](#-human-audio--gemini-tts) • [Non-Tech User Guide](#-non-tech-friendly-guide) • [Claude & Codex Setup](#-claude-code--codex-agent-setup) • [CLI Reference](#-cli-command-reference)
 
 ---
 
 </div>
 
-## 🚀 Quick Start
+## ⚡ 1-Prompt Video Generation
 
-Run the interactive creation wizard directly with `npx` (zero installation needed):
+Provide a prompt or topic, and `unrotskillvid` writes the script, synthesizes human voiceover audio, aligns timeline cuts, customizes compositions, and renders the video automatically:
+
+```bash
+# Autonomous end-to-end video creation from a prompt
+npx unrotskillvid generate "Make a SaaS launch reel for an AI coding assistant"
+
+# Create a faceless storytelling reel with automatic 60fps MP4 rendering
+npx unrotskillvid generate "Explain the 80/20 rule in productivity" --type faceless-explainer --render
+
+# With Google Gemini TTS human voiceover
+npx unrotskillvid generate "Showcase Supabase Auth launch" --provider gemini --voice Puck --render
+```
+
+Or launch the interactive step-by-step wizard:
 
 ```bash
 npx unrotskillvid
-```
-
-Or clone the repository and launch:
-
-```bash
-git clone https://github.com/kh-bikash/unrotskillvid.git
-cd unrotskillvid
-npm start
 ```
 
 ---
@@ -42,11 +47,11 @@ npm start
 
 | Style | Description | Command | Best For |
 |---|---|---|---|
-| 📱 **`screen-hero`** | Screen recording hero with smooth virtual camera pans, floating cards, and bottom captions | `npx unrotskillvid init my-reel --type screen-hero` | Product demos, UI walkthroughs, tech news |
-| 🚀 **`saas-launch`** | Modern browser mockup, 3-card bento feature grid, glowing stats, and launch CTA | `npx unrotskillvid init my-reel --type saas-launch` | SaaS launches, feature reveals, Product Hunt |
-| 💻 **`code-walkthrough`** | Syntax-highlighted code diffs, terminal execution animations, and SWE-bench benchmark bars | `npx unrotskillvid init my-reel --type code-walkthrough` | AI models, developer tools, GitHub repos, PRs |
-| ✨ **`faceless-explainer`** | Kinetic typography, glowing badges, 80/20 leverage protocol, and takeaway cards (**no footage needed**) | `npx unrotskillvid init my-reel --type faceless-explainer` | Mental models, storytelling, finance, viral facts |
-| ⚔️ **`comparison-vs`** | Head-to-head showdown, 4-row feature matrix table, speed/cost charts, and final verdict | `npx unrotskillvid init my-reel --type comparison-vs` | Model A vs B, tool comparisons, benchmark reviews |
+| 📱 **`screen-hero`** | Screen recording hero with smooth virtual camera pans, floating cards, and bottom captions | `npx unrotskillvid generate "..." --type screen-hero` | Product demos, UI walkthroughs, tech news |
+| 🚀 **`saas-launch`** | Modern browser mockup, 3-card bento feature grid, glowing stats, and launch CTA | `npx unrotskillvid generate "..." --type saas-launch` | SaaS launches, feature reveals, Product Hunt |
+| 💻 **`code-walkthrough`** | Syntax-highlighted code diffs, terminal execution animations, and SWE-bench benchmark bars | `npx unrotskillvid generate "..." --type code-walkthrough` | AI models, developer tools, GitHub repos, PRs |
+| ✨ **`faceless-explainer`** | Kinetic typography, glowing badges, 80/20 leverage protocol, and takeaway cards (**no footage needed**) | `npx unrotskillvid generate "..." --type faceless-explainer` | Mental models, storytelling, finance, viral facts |
+| ⚔️ **`comparison-vs`** | Head-to-head showdown, 4-row feature matrix table, speed/cost charts, and final verdict | `npx unrotskillvid generate "..." --type comparison-vs` | Model A vs B, tool comparisons, benchmark reviews |
 
 ---
 
@@ -103,14 +108,9 @@ Output gives you the exact start and duration timestamps to paste into your `ind
 You don't need any coding skills to create viral videos with `unrotskillvid`:
 
 1. **Open your terminal** (Terminal on Mac/Linux or PowerShell on Windows).
-2. **Type:** `npx unrotskillvid create` and hit Enter.
-3. **Follow the on-screen prompts:**
-   - Name your video.
-   - Pick your favorite video style (1 to 5).
-   - Paste what you want the voice to say.
-   - Choose a voice.
-4. **Done!** The tool will automatically create your video project, record the voiceover, and prepare your 60fps vertical reel.
-5. **Render to MP4:**
+2. **Type:** `npx unrotskillvid generate "Your video idea or topic"` and hit Enter.
+3. **Done!** The tool will automatically create your video project, write the script, record the voiceover, sync the visual scenes, and prepare your 60fps vertical reel.
+4. **Render to MP4:**
    ```bash
    npx unrotskillvid render videos/my-video
    ```
@@ -134,7 +134,7 @@ Refer to `AGENTS.md` and `SKILL.md` for deterministic step execution, pause sync
 
 | Command | Description |
 |---|---|
-| `npx unrotskillvid` | Launch interactive step-by-step video creator wizard |
+| `npx unrotskillvid generate "<prompt>" [--render]` | Autonomous prompt-to-video generation end-to-end |
 | `npx unrotskillvid create` | Launch interactive step-by-step video creator wizard |
 | `npx unrotskillvid init <name> [--type <t>]` | Scaffold a new project (`screen-hero`, `saas-launch`, `code-walkthrough`, `faceless-explainer`, `comparison-vs`) |
 | `npx unrotskillvid audio <script> [--provider <p>]` | Generate broadcast-quality 48kHz WAV audio |
@@ -153,6 +153,7 @@ unrotskillvid/
 ├── bin/
 │   └── cli.js                  # Interactive CLI entrypoint (npx unrotskillvid)
 ├── scripts/
+│   ├── generate-reel.py        # Autonomous prompt-to-video generation engine
 │   ├── tts.py                  # Multi-provider TTS engine (Gemini, ElevenLabs, OpenAI, Edge)
 │   ├── audio-map.py            # Speech pause & cut point analyzer
 │   ├── fetch-font.py           # Google Fonts WOFF2 downloader

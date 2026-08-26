@@ -29,6 +29,14 @@ import urllib.request
 import urllib.parse
 import urllib.error
 
+# Force UTF-8 stdout encoding on Windows
+if sys.platform == "win32" and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Default voices per provider
 DEFAULT_VOICES = {
     "gemini": "Puck",  # Options: Puck, Charon, Kore, Fenrir, Aoede

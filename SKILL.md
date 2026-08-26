@@ -1,32 +1,49 @@
 ---
 name: unrotskillvid
 description: >
-  Build high-retention vertical reels (9:16) and explainer videos with natural human audio
-  (Gemini TTS, ElevenLabs, OpenAI, Edge-TTS) and 5 distinct video styles: screen-hero, saas-launch,
-  code-walkthrough, faceless-explainer, and comparison-vs. Self-contained AI video generation skill
-  and NPX CLI tool. Use for "make a reel about this feature", "turn this demo/code into a tutorial reel",
-  "create a faceless explainer", "generate SaaS launch video", or any vertical video creation request.
+  Autonomous end-to-end AI video creation skill and NPX CLI tool. Generates complete 9:16 vertical reels
+  (1080x1920 60fps) and explainer videos from a single prompt or script with realistic human voiceovers
+  (Gemini TTS, Edge TTS, ElevenLabs, OpenAI) and 5 distinct video styles: screen-hero, saas-launch,
+  code-walkthrough, faceless-explainer, and comparison-vs. Handles script writing, audio synthesis,
+  pause alignment, GSAP composition generation, and MP4 rendering.
 ---
 
 # Unrot Skill Video (`unrotskillvid`)
 
-A complete, self-contained AI video creation engine and NPX tool for vertical reels (1080x1920, 60fps) with realistic human audio and 5 versatile video templates.
+An **autonomous end-to-end AI video creation engine** and NPX tool for 9:16 vertical reels (1080x1920, 60fps) with realistic human audio and 5 versatile video styles.
 
 ---
 
-## 5 Video Styles & Presets
+## ⚡ 1-Prompt Video Generation
+
+Provide a prompt or topic, and `unrotskillvid` builds the entire video (script, audio, synced timeline, and compositions) automatically:
+
+```bash
+# Autonomous generation from prompt
+npx unrotskillvid generate "Make a SaaS launch reel for an AI code assistant"
+
+# With automatic 60fps MP4 rendering
+npx unrotskillvid generate "Explain the 80/20 rule in productivity" --type faceless-explainer --render
+
+# With Gemini TTS human audio
+npx unrotskillvid generate "Showcase Supabase Auth launch" --provider gemini --voice Puck --render
+```
+
+---
+
+## 🎨 5 Video Styles & Presets
 
 | Style | Command | Best For |
 |---|---|---|
-| 📱 **`screen-hero`** | `npx unrotskillvid init my-reel --type screen-hero` | Real screen recordings, demo clips with virtual camera pan/zoom |
-| 🚀 **`saas-launch`** | `npx unrotskillvid init my-reel --type saas-launch` | SaaS product reveals, browser mockups, bento grids, pricing CTAs |
-| 💻 **`code-walkthrough`** | `npx unrotskillvid init my-reel --type code-walkthrough` | AI models, GitHub repos, code diffs, SWE-bench performance graphs |
-| ✨ **`faceless-explainer`** | `npx unrotskillvid init my-reel --type faceless-explainer` | Viral storytelling, mental models, finance (no footage required) |
-| ⚖️ **`comparison-vs`** | `npx unrotskillvid init my-reel --type comparison-vs` | Head-to-head battles, feature matrices, benchmark charts, verdicts |
+| 📱 **`screen-hero`** | `npx unrotskillvid generate "..." --type screen-hero` | Real screen recordings, demo clips with virtual camera pan/zoom |
+| 🚀 **`saas-launch`** | `npx unrotskillvid generate "..." --type saas-launch` | SaaS product reveals, browser mockups, bento grids, pricing CTAs |
+| 💻 **`code-walkthrough`** | `npx unrotskillvid generate "..." --type code-walkthrough` | AI models, GitHub repos, code diffs, SWE-bench performance graphs |
+| ✨ **`faceless-explainer`** | `npx unrotskillvid generate "..." --type faceless-explainer` | Viral storytelling, mental models, finance (no footage required) |
+| ⚖️ **`comparison-vs`** | `npx unrotskillvid generate "..." --type comparison-vs` | Head-to-head battles, feature matrices, benchmark charts, verdicts |
 
 ---
 
-## Voiceover & TTS Engine (Gemini TTS, ElevenLabs, OpenAI, Edge)
+## 🎙️ Voiceover & TTS Engine (Gemini TTS, Edge, ElevenLabs, OpenAI)
 
 Generate 48kHz broadcast-quality voiceovers:
 
@@ -51,7 +68,7 @@ npx unrotskillvid list-voices
 
 ---
 
-## 1. Speech-Synced Audio Timeline Mapping
+## 🎯 Speech-Synced Audio Timeline Mapping
 
 **Always map cuts to natural speech pauses before timing scenes:**
 
@@ -63,7 +80,7 @@ Cuts are placed at the midpoint of speech pauses, ensuring visual transitions ne
 
 ---
 
-## 2. Interactive Creation Wizard
+## 👶 Interactive Creation Wizard
 
 For non-technical users and automated generation:
 
@@ -74,17 +91,7 @@ The wizard guides you through choosing a style, writing/pasting a script, select
 
 ---
 
-## 3. Composition Rules & Design Law
-
-- **Typography:** Embedded WOFF2 fonts only (`Geist`, `Inter`, etc.) via `scripts/fetch-font.py`. Statements capped at 700 weight.
-- **Ambient Glows:** Use radial gradients (`radial-gradient(circle, ...)`) to avoid H.264 banding.
-- **Timing & Visibility:** Every animated element requires `class="clip"`, `data-start`, and `data-duration`.
-- **GSAP Timelines:** Paused timelines registered on `window.__timelines[compositionId]`.
-- **Layout Compliance:** Run `npx unrotskillvid check` before rendering.
-
----
-
-## 4. Verification & Rendering
+## 🛠️ Verification & Rendering
 
 ```bash
 # Validate compositions & contrast

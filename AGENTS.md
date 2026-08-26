@@ -4,12 +4,19 @@ This document defines the agent execution model for generating, customizing, and
 
 ## Overview
 
-`unrotskillvid` generates 1080x1920 60fps vertical reels using HTML5/GSAP compositions with human-quality TTS audio (Gemini TTS, ElevenLabs, OpenAI, Edge-TTS).
+`unrotskillvid` autonomously transforms any prompt, script, or footage into a 1080x1920 60fps vertical reel with human-quality TTS audio (Gemini TTS, ElevenLabs, OpenAI, Edge-TTS).
 
-## Agent Execution Checklist
+## Autonomous 1-Command Execution
 
-1. **Scaffold Project**:
-   Run `node bin/cli.js init <project-name> --type <template-type>`
+When the user asks to create a video from a prompt or topic:
+```bash
+python scripts/generate-reel.py "<user_prompt>" --type <auto|screen-hero|saas-launch|code-walkthrough|faceless-explainer|comparison-vs> --provider <auto|gemini|edge|elevenlabs|openai> --render
+```
+
+## Step-by-Step Agent Execution Checklist
+
+1. **Synthesize & Scaffold**:
+   Run `node bin/cli.js generate "<prompt>"` or `node bin/cli.js init <project-name> --type <template-type>`
    Templates: `screen-hero`, `saas-launch`, `code-walkthrough`, `faceless-explainer`, `comparison-vs`.
 
 2. **Generate Narration Audio**:
